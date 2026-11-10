@@ -495,30 +495,6 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
 .car rect, .car path { fill: var(--atlantic); }
 .car circle { fill: var(--ink); }
 
-
-/* ================= Boule à neige ================= */
-.globe-cta { background: #173F5C !important; margin-top: 22px; }
-#globe { position: fixed; inset: 0; z-index: 75; display: none; flex-direction: column; text-align: center; color: #fff; overflow: hidden;
-  background: radial-gradient(100% 70% at 50% 40%, #1B3A55 0%, #0D1B2C 60%, #070D16 100%); }
-#globe.on { display: flex; animation: fullIn .5s ease-out; }
-#globe .stars { position: absolute; inset: 0; opacity: .5; pointer-events: none;
-  background-image: radial-gradient(1.5px 1.5px at 20% 15%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 70% 8%, #fff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 85% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 10% 45%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 55% 22%, #fff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 35% 6%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 92% 60%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 6% 75%, #fff 50%, transparent 51%); }
-.globe-close { position: absolute; z-index: 3; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(255,255,255,.14); color: #fff; display: grid; place-items: center; }
-.globe-close svg { width: 22px; height: 22px; }
-.globe-top { position: relative; padding: calc(env(safe-area-inset-top) + 64px) 24px 0; }
-.globe-kicker { font-family: "Caveat", cursive; font-size: 30px; color: #F3DB8E; }
-.globe-top h2 { font-size: clamp(26px, 7.5vw, 34px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; transition: opacity .4s; }
-.globe-stage { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; }
-.globe { position: relative; width: min(88vw, 52svh, 440px); aspect-ratio: 1; flex: none; filter: drop-shadow(0 20px 40px rgba(0,0,0,.5)); touch-action: none; }
-.globe > * { position: absolute; inset: 0; width: 100%; height: 100%; }
-.globe-glass { pointer-events: none; }
-.globe-base { width: min(76vw, 45svh, 380px); height: min(16vw, 9svh, 80px); margin-top: calc(min(88vw, 52svh, 440px) * -.1); position: relative; z-index: 2; flex: none;
-  background: linear-gradient(#7A4A2A, #4A2A16); border-radius: 12px 12px 40% 40% / 12px 12px 60% 60%; box-shadow: inset 0 6px 0 rgba(255,255,255,.12), 0 14px 30px rgba(0,0,0,.5); display: grid; place-items: center; }
-.globe-base span { font-family: "Caveat", cursive; font-size: clamp(18px, 5.5vw, 26px); color: #F3DB8E; background: linear-gradient(#C9A24A, #8A6A24); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 4px 18px; border: 1.5px solid rgba(243,219,142,.5); border-radius: 6px; }
-.globe-bottom { padding: 0 28px calc(env(safe-area-inset-bottom) + 26px); min-height: 70px; }
-#globeHint { font-size: 14px; opacity: .65; line-height: 1.4; transition: opacity .6s; }
-#globeHint.final { font-family: "Caveat", cursive; font-size: 26px; opacity: 1; color: #F3DB8E; }
-
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .bubble { opacity: 1; transform: none; } .polaroid img { filter: none; } }
 </style>
 </head>
@@ -589,7 +565,6 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
       <div id="scratchBox" hidden>
         <p class="sec-sub">Gratte avec ton doigt.</p>
         <div class="scratch-wrap"><div class="reveal" id="reveal"></div><canvas id="scratch"></canvas></div>
-        <button class="cta globe-cta" id="globeBtn" hidden>Une dernière chose</button>
       </div>
     </div>
   </section>
@@ -617,49 +592,6 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
   <div class="tb-end" id="stEnd" hidden><div><h3>Fin du voyage du groupe de Madère.</h3><p>Il reste une dernière chose à ouvrir.</p><button id="toGift">Voir la surprise</button></div></div>
 </div>
 
-
-<!-- ============ La boule à neige ============ -->
-<div id="globe" role="dialog" aria-modal="true" aria-label="Boule à neige">
-  <div class="stars"></div>
-  <button class="globe-close" id="globeClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <div class="globe-top"><p class="globe-kicker">Tous nos souvenirs</p><h2 id="globeTitle">Secoue ton téléphone</h2></div>
-  <div class="globe-stage">
-    <div class="globe" id="globeBox">
-      <svg class="globe-scene" viewBox="0 0 400 400" aria-hidden="true">
-        <defs>
-          <radialGradient id="gsky" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#2E6F8E"/><stop offset=".7" stop-color="#173F5C"/><stop offset="1" stop-color="#0D2A40"/></radialGradient>
-          <clipPath id="gclip"><circle cx="200" cy="200" r="196"/></clipPath>
-        </defs>
-        <g clip-path="url(#gclip)">
-          <rect width="400" height="400" fill="url(#gsky)"/>
-          <circle cx="300" cy="96" r="22" fill="#FFF3C8" opacity=".85"/>
-          <path d="M0,280 C60,262 120,272 180,262 C240,252 300,266 400,258 L400,400 L0,400Z" fill="#1F6FB2"/>
-          <path d="M0,292 q20,-8 40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0" fill="none" stroke="#8FD3F0" stroke-width="3" opacity=".7"/>
-          <path d="M120,300 C150,230 200,200 250,214 C300,228 330,260 350,300 Z" fill="#CFE0C9"/>
-          <path d="M120,300 C150,230 200,200 250,214 C300,228 330,260 350,300" fill="none" stroke="#2F5D3A" stroke-width="3"/>
-          <path d="M196,214 L222,170 L248,214Z" fill="#8FAE7E" stroke="#2F5D3A" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M214,184 L222,170 L230,184 L225,188 L219,182Z" fill="#fff"/>
-          <g transform="translate(300,244)"><path d="M-6,22 L-4,-14 L4,-14 L6,22Z" fill="#fff" stroke="#12302B" stroke-width="2"/><path d="M-5,4 h10 v6 h-10Z M-4,-6 h8 v5 h-8Z" fill="#C0266D"/><rect x="-6" y="-21" width="12" height="7" rx="1" fill="#C0266D"/><path d="M6,-18 L44,-30 L44,-6Z" fill="#F3DB8E" opacity=".6"/></g>
-          <g transform="translate(160,250)"><path d="M0,30 C2,14 -2,0 1,-10" fill="none" stroke="#8A6B3A" stroke-width="4" stroke-linecap="round"/><path d="M1,-10 C-10,-14 -18,-8 -22,-2 M1,-10 C10,-16 20,-12 24,-4 M1,-10 C-4,-20 -12,-22 -16,-20 M1,-10 C6,-20 14,-22 18,-20" fill="none" stroke="#4F8A4A" stroke-width="4" stroke-linecap="round"/></g>
-          <g fill="#FBFAF6" stroke="#B9A88A" stroke-width="1"><rect x="236" y="250" width="16" height="13"/><rect x="254" y="254" width="16" height="13"/><rect x="190" y="258" width="16" height="13"/></g>
-          <g fill="#E0703B"><path d="M234,251 l10,-8 l10,8Z"/><path d="M252,255 l10,-8 l10,8Z"/><path d="M188,259 l10,-8 l10,8Z"/></g>
-          <path d="M60,330 l30,0 l-6,8 l-20,0Z" fill="#F2A93B" stroke="#12302B" stroke-width="1.6"/><path d="M76,329 v-18 l10,16Z" fill="#fff" stroke="#12302B" stroke-width="1.4"/>
-          <ellipse cx="200" cy="372" rx="190" ry="40" fill="#fff" opacity=".9"/>
-        </g>
-      </svg>
-      <canvas id="globeCanvas"></canvas>
-      <svg class="globe-glass" viewBox="0 0 400 400" aria-hidden="true">
-        <circle cx="200" cy="200" r="196" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3"/>
-        <path d="M78,120 C100,72 150,40 206,36" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="10" stroke-linecap="round"/>
-        <path d="M60,170 C62,156 66,146 72,136" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="7" stroke-linecap="round"/>
-        <circle cx="200" cy="200" r="196" fill="url(#gshine)"/>
-        <defs><radialGradient id="gshine" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#9FD3FF" stop-opacity=".18"/></radialGradient></defs>
-      </svg>
-    </div>
-    <div class="globe-base"><span id="globePlate">Pour Sarah, 2026</span></div>
-  </div>
-  <div class="globe-bottom"><p id="globeHint">Secoue, ou fais tourner ton doigt dans la boule.</p></div>
-</div>
 <div id="full" role="dialog" aria-modal="true" aria-label="Photo en plein écran"><img alt=""><button aria-label="Fermer">×</button></div>
 <canvas id="confetti"></canvas>
 
@@ -1454,7 +1386,7 @@ function drawScratch() {
     if (cv.classList.contains("done")) return;
     const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let c = 0, t = 0;
     for (let i = 3; i < d.length; i += 4 * 50) { t++; if (d[i] === 0) c++; }
-    if (c / t > 0.5) { cv.classList.add("done"); confetti(); Sound.birthday(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); setTimeout(() => { $("#globeBtn").hidden = false; $("#globeBtn").scrollIntoView({ behavior: "smooth", block: "center" }); }, 2500); }
+    if (c / t > 0.5) { cv.classList.add("done"); confetti(); Sound.birthday(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); }
   };
   cv.addEventListener("pointerdown", (e) => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(e); });
   cv.addEventListener("pointermove", (e) => { if (down) scratch(e); });
@@ -1473,125 +1405,6 @@ function confetti() {
     if (++frames < 220) requestAnimationFrame(loop); else ctx.clearRect(0, 0, cv.width, cv.height);
   })();
 }
-
-
-/* ================= Boule à neige ================= */
-// Les flocons sont de petites photos de tous les voyages, qui tourbillonnent quand on secoue
-const Globe = {
-  parts: [], imgs: [], raf: 0, W: 0, R: 0, energy: 0, settledOnce: false, lastShake: 0, finalShown: false,
-  open() {
-    $("#globe").classList.add("on"); document.body.style.overflow = "hidden";
-    $("#globePlate").textContent = (C.prenom ? "Pour " + C.prenom + ", " : "") + "2026";
-    // autorisation des mouvements sur iPhone (doit être demandée pendant le toucher)
-    if (window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function") {
-      DeviceMotionEvent.requestPermission().then((r) => { if (r === "granted") this.listenMotion(); }).catch(() => {});
-    } else this.listenMotion();
-    requestAnimationFrame(() => { this.setup(); this.shake(1.4); });
-  },
-  setup() {
-    const cv = $("#globeCanvas"), box = $("#globeBox").getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
-    cv.width = box.width * dpr; cv.height = box.height * dpr;
-    this.ctx = cv.getContext("2d"); this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.W = box.width; this.R = box.width * 0.47; this.cx = box.width / 2; this.cy = box.height / 2;
-    this.ground = this.cy + this.R * 0.62;
-    if (!this.parts.length) {
-      const srcs = [];
-      playable.forEach((v) => v.chapitres.forEach((c) => c.medias.forEach((m) => srcs.push(poster(m)))));
-      const pick = srcs.sort(() => Math.random() - .5).slice(0, 34);
-      this.imgs = pick.map((src) => { const im = new Image(); im.src = src; return im; });
-      const s = this.W / 400;
-      this.imgs.forEach((im) => this.parts.push({ kind: "photo", im, size: (20 + Math.random() * 10) * s, ...this.spawn() }));
-      for (let i = 0; i < 160; i++) this.parts.push({ kind: "snow", size: (1.2 + Math.random() * 2.4) * s, gold: Math.random() < .25, ...this.spawn() });
-    }
-    this.bindTouch();
-    cancelAnimationFrame(this.raf); this.loop();
-  },
-  spawn() {
-    const a = Math.random() * Math.PI * 2, r = Math.random() * this.R * .8;
-    return { x: this.cx + Math.cos(a) * r, y: this.cy + Math.sin(a) * r * .6, vx: 0, vy: 0, rot: Math.random() * 6, vr: 0, rest: false };
-  },
-  shake(power) {
-    this.energy = Math.min(3, this.energy + power); this.lastShake = performance.now();
-    this.parts.forEach((p) => {
-      p.rest = false;
-      const dx = p.x - this.cx, dy = p.y - this.cy, d = Math.hypot(dx, dy) || 1;
-      p.vx += (Math.random() - .5) * 9 * power - dy / d * 4 * power;   // tourbillon
-      p.vy += (Math.random() - .7) * 9 * power + dx / d * 4 * power;
-      p.vr += (Math.random() - .5) * .4 * power;
-    });
-    $("#globeTitle").style.opacity = ".35";
-    if (navigator.vibrate) navigator.vibrate(12);
-  },
-  listenMotion() {
-    if (this.motionOn) return; this.motionOn = true;
-    window.addEventListener("devicemotion", (e) => {
-      if (!$("#globe").classList.contains("on")) return;
-      const a = e.acceleration && e.acceleration.x != null ? e.acceleration : null;
-      const m = a ? Math.hypot(a.x, a.y, a.z) : 0;
-      if (m > 11 && performance.now() - this.lastShake > 140) this.shake(Math.min(1.6, m / 18));
-    });
-  },
-  bindTouch() {
-    if (this.touchOn) return; this.touchOn = true;
-    const box = $("#globeBox"); let last = null;
-    box.addEventListener("pointerdown", (e) => { last = [e.clientX, e.clientY, performance.now()]; box.setPointerCapture(e.pointerId); });
-    box.addEventListener("pointermove", (e) => {
-      if (!last) return;
-      const dt = Math.max(16, performance.now() - last[2]), dx = e.clientX - last[0], dy = e.clientY - last[1];
-      const sp = Math.hypot(dx, dy) / dt;
-      if (sp > .5 && performance.now() - this.lastShake > 90) this.shake(Math.min(1.2, sp / 2.5));
-      last = [e.clientX, e.clientY, performance.now()];
-    });
-    box.addEventListener("pointerup", () => last = null);
-  },
-  loop() {
-    const ctx = this.ctx, g = this.W / 400 * .045;
-    ctx.clearRect(0, 0, this.W, this.W);
-    this.energy *= .985;
-    let moving = 0;
-    // la neige d'abord, les photos par-dessus
-    for (const kind of ["snow", "photo"]) for (const p of this.parts) {
-      if (p.kind !== kind) continue;
-      if (!p.rest) {
-        p.vy += g * (p.kind === "photo" ? .8 : .55);
-        p.vx += Math.sin(performance.now() / 700 + p.rot) * .015;     // léger flottement dans l'eau
-        p.vx *= .965; p.vy *= .965; p.vr *= .97;
-        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-        const dx = p.x - this.cx, dy = p.y - this.cy, d = Math.hypot(dx, dy), lim = this.R - p.size * .7;
-        if (d > lim) { p.x = this.cx + dx / d * lim; p.y = this.cy + dy / d * lim; p.vx *= -.4; p.vy *= -.4; }
-        const floor = this.ground - p.size * .4 + (Math.abs(p.x - this.cx) / this.R) ** 2 * -this.R * .18;
-        if (p.y > floor && p.vy > 0) { p.y = floor; p.vy = 0; p.vx *= .6; if (Math.abs(p.vx) < .15) p.rest = true; }
-        if (p.kind === "photo" && Math.abs(p.vx) + Math.abs(p.vy) > .8) moving++;
-      }
-      ctx.save(); ctx.translate(p.x, p.y);
-      if (p.kind === "snow") {
-        ctx.fillStyle = p.gold ? "rgba(243,219,142,.95)" : "rgba(255,255,255,.95)";
-        ctx.beginPath(); ctx.arc(0, 0, p.size, 0, 7); ctx.fill();
-      } else {
-        ctx.rotate(Math.sin(p.rot) * .5);
-        const s = p.size, b = s * .1;
-        ctx.fillStyle = "#FBFAF6"; ctx.shadowColor = "rgba(0,0,0,.35)"; ctx.shadowBlur = 4;
-        ctx.fillRect(-s / 2 - b, -s / 2 - b, s + b * 2, s + b * 3.4);
-        ctx.shadowBlur = 0;
-        if (p.im.complete && p.im.naturalWidth) {
-          const iw = p.im.naturalWidth, ih = p.im.naturalHeight, m = Math.min(iw, ih);
-          ctx.drawImage(p.im, (iw - m) / 2, (ih - m) / 2, m, m, -s / 2, -s / 2, s, s);
-        } else { ctx.fillStyle = "#9FB8C0"; ctx.fillRect(-s / 2, -s / 2, s, s); }
-      }
-      ctx.restore();
-    }
-    // quand tout est retombé après une secousse : le message final
-    if (moving < 4 && this.energy < .2 && performance.now() - this.lastShake > 2500 && this.lastShake && !this.finalShown) {
-      this.finalShown = true;
-      $("#globeTitle").style.opacity = "1"; $("#globeTitle").textContent = "Joyeux anniversaire " + (C.prenom || "") + " !";
-      const h = $("#globeHint"); h.classList.add("final"); h.textContent = "Secoue encore quand tu veux.";
-    }
-    this.raf = requestAnimationFrame(() => this.loop());
-  },
-  close() { cancelAnimationFrame(this.raf); $("#globe").classList.remove("on"); document.body.style.overflow = ""; }
-};
-$("#globeBtn").onclick = () => Globe.open();
-$("#globeClose").onclick = () => Globe.close();
 
 /* ================= Embarquement ================= */
 $("#pName").textContent = C.prenom || "Toi";
