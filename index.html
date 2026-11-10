@@ -1387,7 +1387,7 @@ function drawScratch() {
     if (cv.classList.contains("done")) return;
     const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let c = 0, t = 0;
     for (let i = 3; i < d.length; i += 4 * 50) { t++; if (d[i] === 0) c++; }
-    if (c / t > 0.5) { cv.classList.add("done"); confetti(); Sound.birthday(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); }
+    if (c / t > 0.5) { cv.classList.add("done"); confetti(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); }
   };
   cv.addEventListener("pointerdown", (e) => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(e); });
   cv.addEventListener("pointermove", (e) => { if (down) scratch(e); });
