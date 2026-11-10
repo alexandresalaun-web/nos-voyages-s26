@@ -586,7 +586,7 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
   <div class="stack" id="stack"></div>
   <div class="tb-bottom">
     <button id="stPrev" aria-label="Reprendre la photo d'avant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
-    <p class="tb-hint" id="stHint">Glisse pour lancer la photo,<br>touche pour la retourner.</p>
+    <p class="tb-hint" id="stHint">Glisse pour lancer la photo.</p>
     <button id="stNext" aria-label="Photo suivante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </div>
   <div class="tb-end" id="stEnd" hidden><div><h3>Fin du voyage du groupe de Madère.</h3><p>Il reste une dernière chose à ouvrir.</p><button id="toGift">Voir la surprise</button></div></div>
@@ -1289,6 +1289,7 @@ const Story = {
     const card = this.top(); if (!card) return;
     const v = card.querySelector("video"), snd = card.querySelector(".snd");
     if (v && snd) { snd.remove(); v.muted = Sound.muted; v.currentTime = 0; v.play().catch(() => {}); this.duckIfNeeded(); return; }
+    return;   // plus de texte au dos des photos
     card.classList.toggle("flipped");
     if (card.classList.contains("flipped")) {
       const back = card.querySelector(".back"), p = back.querySelector("p"); let fs = 34; p.style.fontSize = "";
