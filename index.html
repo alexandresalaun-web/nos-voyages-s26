@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nos voyages">
+<meta name="theme-color" content="#0E4D64">
+<title>Nos voyages</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<script>
+/* =========================================================
+   TOUT CE QUE TU PEUX MODIFIER EST ICI
+   - texte : la phrase écrite au dos du polaroid
+   - medias : les photos et vidéos, dans l'ordre
+     (pour une note différente au dos d'une photo :
+      { src: "photos/x.jpg", note: "ta phrase" })
+   - vocal : un vocal qui raconte le moment (fichier dans vocaux/)
+   ========================================================= */
+const CONFIG = {
+  prenom: "Sarah",                 // son prénom, ex : "Léa"
+  code: "lnam2026",            // le code pour ouvrir l'appli (majuscules et accents ignorés)
+  indice: "",                 // texte au-dessus du code (laisse vide pour ne rien afficher)
+  // Musique jouée dans les niveaux (chaque voyage peut avoir la sienne avec musique: "...")
+  musique: "musique/kids.mp3",
+
+  voyages: [
+  /* ------------------------- NIVEAU 1 ------------------------- */
+  { id: "lisbonne", nom: "Lisbonne", dates: "2026", teinte: "#C9A227",
+    carte: {
+      ville: "lisbonne", vue: "0 0 720 600",
+      arrivee: { type: "tram", depuis: [760, 250] },
+      route: [[700,250],[620,262],[548,268],[470,280],[420,300]]
+    },
+    chapitres: [
+      { titre: "Les soirées à l'appart", lieu: "L'appart de Léopold", pos: [470, 262], bulle: [0, -172],
+        texte: "L'appart de Léopold : la table, les bouteilles, la JBL. Le point de départ de toutes les soirées.",
+        medias: ["photos/lis-appart-1.jpg", "photos/lis-appart-2.jpg", "photos/lis-appart-3.jpg", "photos/lis-appart-4.jpg"] },
+      { titre: "Le K Urban", lieu: "K Urban, au bord du Tage", pos: [508, 336], bulle: [140, -186],
+        texte: "Le K Urban, lumière rouge, 4 h du matin, et toujours debout. Enfin presque tous.",
+        medias: ["photos/lis-boite-2.jpg", "photos/lis-boite-1.jpg", "videos/lis-boite.mp4"] },
+      { titre: "L'anniv au McDo", lieu: "McDonald's", pos: [404, 238], bulle: [-172, -36],
+        texte: "Chapeaux dorés, une bougie plantée dans un dessert, le plus beau resto de la ville.",
+        medias: ["photos/lis-mcdo-1.jpg", "photos/lis-mcdo-2.jpg", "photos/lis-mcdo-3.jpg"] },
+      { titre: "Cascais", lieu: "Cascais", pos: [76, 396], bulle: [120, 96],
+        texte: "Le coucher de soleil sur la plage, le kiosque rayé, et personne pour nous.",
+        medias: ["photos/lis-cascais.jpg"] }
+    ]
+  },
+
+  /* ------------------------- NIVEAU 2 ------------------------- */
+  { id: "nazare", nom: "Nazaré", dates: "Avril 2026", teinte: "#1F6FB2", ref: "Projet Blair Witch", musique: "musique/unforgettable.mp3",
+    carte: {
+      ville: "nazare",                 // carte dessinée de la ville (voir dessinNazare)
+      vue: "0 0 720 660",
+      arrivee: { type: "bus", depuis: [760, 700] },
+      route: [[600,660],[520,600],[478,520],[462,430],[448,330],[420,250],[360,212]],
+      groupe: [700, 30]
+    },
+    chapitres: [
+      { titre: "Óbidos", lieu: "Óbidos", pos: [452, 628], bulle: [-235, -42],
+        texte: "Les remparts, la librairie géante, et quelqu'un qui se cache sur la photo de groupe.",
+        medias: ["photos/naz-obidos-1.jpg", "photos/naz-obidos-2.jpg"] },
+      { titre: "Coucher de soleil", lieu: "São Martinho do Porto", pos: [452, 596], bulle: [-332, -150],
+        texte: "Pouces levés devant le soleil. Classique.",
+        medias: ["photos/naz-sunset-garcons.jpg", "photos/naz-sunset-filles.jpg"] },
+      { titre: "Les virées de nuit", lieu: "Quelque part",
+        texte: "Lampe torche, forêt, cris dans le noir.",
+        medias: ["videos/naz-voiture.mp4", "videos/naz-nuit.mp4"] },
+      { titre: "Les grottes", lieu: "Sous terre",
+        texte: "Éclairage orange, flash obligatoire.",
+        medias: ["photos/naz-grottes.jpg"] },
+      { titre: "Léopold", lieu: "Nazaré",
+        texte: "Gros plan sur Léopold. Sans commentaire.",
+        medias: ["photos/naz-gros-plan.jpg"] },
+      { titre: "Nazaré", lieu: "Le Sítio et la plage", pos: [330, 208], bulle: [-170, 70],
+        texte: "Le Sítio, les bateaux, et l'apéro sur la plage avec la JBL.",
+        medias: ["photos/naz-sitio.jpg", "photos/naz-bateaux.jpg", "photos/naz-picnic-1.jpg", "photos/naz-picnic-2.jpg"] },
+      { titre: "Le dîner", lieu: "Nazaré", pos: [520, 400], bulle: [120, -60],
+        texte: "Bitoques et œufs au plat pour finir.",
+        medias: ["photos/naz-diner.jpg"] }
+    ]
+  },
+
+  /* ------------------------- NIVEAU 3 ------------------------- */
+  { id: "algarve", nom: "Algarve", dates: "Avril 2026", teinte: "#D9822B", ref: "Combientième verre ?", refPartout: true, musique: "musique/beauty-and-a-beat.mp3",
+    carte: {
+      ville: "algarve", vue: "0 0 720 640",
+      arrivee: { type: "bus", depuis: [760, -40] },
+      route: [[700,40],[600,96],[500,150],[430,220],[380,292]]
+    },
+    chapitres: [
+      { titre: "L'appart", lieu: "Portimão", pos: [372, 300], bulle: [-160, -120],
+        texte: "Pâtes bolo, mozzarella râpée, et les signes avant de sortir.",
+        medias: ["photos/alg-pates.jpg", "photos/alg-cuisine.jpg", "photos/alg-signes-1.jpg", "photos/alg-signes-2.jpg", "videos/alg-lunettes.mp4"] },
+      { titre: "La soirée blanche", lieu: "Praia da Rocha", pos: [404, 392], bulle: [10, 150],
+        texte: "Tout le monde en blanc, les bâtons lumineux, et la question du soir : combientième verre ?",
+        medias: ["photos/alg-rue-1.jpg", "photos/alg-rue-2.jpg", "photos/alg-club-1.jpg", "photos/alg-club-2.jpg", "photos/alg-club-3.jpg", "videos/alg-club.mp4"] },
+      { titre: "La plage", lieu: "Praia da Rocha", pos: [336, 448], bulle: [-110, 118],
+        texte: "Le cadre Erasmus, le ballon, et la remontée pieds nus.",
+        medias: ["photos/alg-plage-erasmus.jpg", "photos/alg-marches.jpg"] },
+      { titre: "L'arche", lieu: "Praia dos Três Irmãos", pos: [168, 446], bulle: [-100, 110],
+        texte: "Le passage dans la falaise, et la mer de l'autre côté.",
+        medias: ["photos/alg-arche.jpg"] },
+      { titre: "Slide & Splash", lieu: "Lagoa", pos: [606, 214], bulle: [-110, -120],
+        texte: "Le Corkscrew les bras en l'air, puis la sieste sur la pelouse.",
+        medias: ["photos/alg-toboggan.jpg", "photos/alg-pelouse.jpg"] }
+    ]
+  },
+
+  /* ------------------------- NIVEAU 4 ------------------------- */
+  { id: "madere", nom: "Madère", dates: "Été 2026", teinte: "#C0266D", final: true, musique: "musique/kids.mp3", ref: "Où est Camilo ?", groupe: "Le groupe de Madère",
+    carte: {
+      lon0: -17.30, lat0: 32.905, k: 1650, cos: 0.841, vue: "20 -70 950 700",
+      terre: [[-17.265,32.805],[-17.24,32.835],[-17.20,32.858],[-17.165,32.870],[-17.135,32.848],[-17.10,32.830],[-17.06,32.812],[-17.02,32.817],[-16.98,32.831],[-16.94,32.835],[-16.90,32.822],[-16.865,32.805],[-16.835,32.785],[-16.80,32.762],[-16.765,32.747],[-16.72,32.752],[-16.68,32.754],[-16.652,32.745],[-16.69,32.737],[-16.735,32.727],[-16.77,32.705],[-16.79,32.685],[-16.82,32.660],[-16.86,32.645],[-16.90,32.641],[-16.94,32.634],[-16.98,32.638],[-17.02,32.650],[-17.06,32.665],[-17.10,32.676],[-17.14,32.696],[-17.18,32.720],[-17.22,32.748],[-17.255,32.775]],
+      ville: "madere",
+      arrivee: { type: "avion", depuis: [1010, -60], aeroport: [-16.774, 32.694], retour: true },
+      pics: [[470,282,34],[505,270,46],[545,284,30],[420,250,26],[600,262,24],[360,230,22]],
+      mer: [60, 590], groupe: [945, 618], villes: []
+    },
+    chapitres: [
+        { titre: "Le départ", lieu: "Aéroport",
+          texte: "Encore propres, encore reposés.",
+          medias: ["photos/depart-1.jpg"], vocal: "" },
+
+        { titre: "Funchal", lieu: "Funchal", lat: 32.662, lng: -16.915, bulle: [100, 110],
+          texte: "Palmiers le jour, lumières la nuit.",
+          medias: ["photos/funchal-jour.jpg", "photos/funchal-nuit.jpg"], vocal: "" },
+
+        { titre: "Lever de soleil", lieu: "Pico do Arieiro", lat: 32.7356, lng: -16.9287, bulle: [175, -40],
+          texte: "Réveil en pleine nuit, frontale sur la tête, et ça.",
+          medias: ["photos/arieiro-1.jpg", "photos/arieiro-2.jpg", "photos/arieiro-aube.jpg", "photos/arieiro-mer-nuages.jpg", "photos/arieiro-3.jpg", "photos/arieiro-4.jpg", "photos/arieiro-5.jpg"], vocal: "" },
+
+        { titre: "La levada", lieu: "Levada",
+          texte: "Rando à l'ombre. Enfin, presque.",
+          medias: ["photos/levada.jpg", "videos/levada.mp4"], vocal: "" },
+
+        { titre: "Fanal", lieu: "Forêt de Fanal", lat: 32.812, lng: -17.145, bulle: [-30, -150],
+          texte: "Elle voulait clairement être sur la photo.",
+          medias: ["photos/fanal.jpg"], vocal: "" },
+
+        { titre: "Les déj", lieu: "Toujours avec vue",
+          texte: "Steak frites d'un côté, sandwich vue mer de l'autre.",
+          medias: ["videos/resto.mp4", "photos/dej-sandwich.jpg"], vocal: "" },
+
+        { titre: "Côte nord", lieu: "Côte nord",
+          texte: "Le transat, le pic, l'océan. Rien à ajouter.",
+          medias: ["photos/cote-nord-2.jpg", "photos/cote-nord.jpg", "photos/cote-nord-3.jpg", "videos/cote-nord.mp4"], vocal: "" },
+
+        { titre: "Seixal", lieu: "Seixal", lat: 32.822, lng: -17.104, bulle: [64, -120],
+          texte: "Sable noir, eau glacée, et les crabes.",
+          medias: ["photos/seixal-2.jpg", "photos/seixal-3.jpg", "photos/seixal-4.jpg", "photos/seixal-5.jpg", "photos/seixal-6.jpg", "videos/crabes.mp4"], vocal: "" },
+
+        { titre: "La cascade", lieu: "Cascata dos Anjos", lat: 32.6786, lng: -17.1182, bulle: [-40, 118],
+          texte: "Une cascade qui tombe direct sur la route.",
+          medias: ["videos/cascade.mp4"], vocal: "" },
+
+        { titre: "Les falaises", lieu: "Fin de journée",
+          texte: "Le soleil qui tape sur les falaises.",
+          medias: ["photos/falaises.jpg"], vocal: "" },
+
+        { titre: "Praia Formosa", lieu: "Praia Formosa", lat: 32.640, lng: -16.950, bulle: [-90, 112],
+          texte: "Galets, Cabo Girão au fond, Funchal à 5,3 km.",
+          medias: ["photos/formosa-2.jpg", "photos/formosa.jpg"], vocal: "" },
+
+        { titre: "Le retour", lieu: "Aéroport",
+          texte: "Têtes de fin de vacances.",
+          medias: ["photos/retour.jpg"], vocal: "" }
+    ]
+  }
+  ],
+
+  // Ce qui apparaît sous la carte à gratter, à la fin du dernier niveau
+  surprise: {
+    photo: "photos/seixal-1.jpg",
+    texte: "Joyeux anniversaire de la part du groupe de Madère. On repart quand ?"
+  }
+};
+</script>
+<style>
+:root {
+  --bg: #EEF3F0; --surface: #FFFFFF; --ink: #12302B; --muted: #557069;
+  --atlantic: #0E4D64; --sea: #D3E5E7; --wave: #8DB9C2;
+  --laurel: #2F5D3A; --island: #CFE0C9; --peak: #A9C7A1;
+  --bougainvillea: #C0266D; --sun: #F2A93B; --line: #CFDCD6; --scratch: #2F5D3A;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #0F1E1C; --surface: #17302C; --ink: #E6F0EC; --muted: #9DB8B0;
+  --atlantic: #5DB3CF; --sea: #11272C; --wave: #2F5961;
+  --laurel: #8CC79A; --island: #23443A; --peak: #2F5A4C;
+  --bougainvillea: #F06AA6; --sun: #F2B451; --line: #2A4842; --scratch: #3C7049;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1E1C; --surface: #17302C; --ink: #E6F0EC; --muted: #9DB8B0;
+    --atlantic: #5DB3CF; --sea: #11272C; --wave: #2F5961;
+    --laurel: #8CC79A; --island: #23443A; --peak: #2F5A4C;
+    --bougainvillea: #F06AA6; --sun: #F2B451; --line: #2A4842; --scratch: #3C7049;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { font-family: "Bricolage Grotesque", system-ui, sans-serif; background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+html { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--bougainvillea); outline-offset: 2px; }
+img, video { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* ================= Carte d'embarquement ================= */
+#lock {
+  position: fixed; inset: 0; z-index: 60; overflow-y: auto;
+  background: #0E4D64; color: #12302B;
+  display: grid; grid-template-columns: minmax(0, 1fr); place-items: center;
+  padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  transition: opacity .5s .5s;
+}
+#lock.gone { opacity: 0; pointer-events: none; }
+.pass { width: 100%; min-width: 0; max-width: 400px; filter: drop-shadow(0 18px 30px rgba(0,0,0,.3)); transition: transform .7s cubic-bezier(.6,0,.3,1); }
+#lock.gone .pass { transform: translateY(-120vh) rotate(-8deg); }
+.pass-top, .pass-stub { background: #FBFAF6; border-radius: 22px; }
+.pass-top { padding: 22px 22px 18px; border-bottom: 2px dashed #C9D3CF; border-radius: 22px 22px 6px 6px; position: relative; }
+.pass-stub { padding: 18px 22px 22px; border-radius: 6px 6px 22px 22px; }
+.pass .airline { display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-between; align-items: center; color: #0E4D64; font-weight: 800; font-size: 15px; }
+.pass .airline span:last-child { color: #557069; font-weight: 600; }
+.route { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; margin: 22px 0 18px; }
+.route .code { font-size: clamp(40px, 13vw, 54px); font-weight: 800; letter-spacing: -0.04em; line-height: .9; }
+.route .city { font-size: 14px; color: #557069; margin-top: 4px; white-space: nowrap; }
+.route .to { text-align: right; }
+.route .to .code { color: #C0266D; }
+.route svg { width: 44px; height: 44px; margin: 0 6px 14px; color: #0E4D64; }
+.stops { font-size: 14px; color: #557069; margin: -6px 0 14px; }
+.fields { display: grid; grid-template-columns: 1fr auto auto; gap: 12px 18px; }
+.fields dt { font-size: 12px; color: #557069; }
+.fields dd { font-size: 17px; font-weight: 700; margin-top: 2px; white-space: nowrap; }
+.pass-stub label { display: block; font-size: 14px; color: #557069; margin-bottom: 8px; }
+.pass-stub .row { display: flex; gap: 8px; }
+.pass-stub input { flex: 1; min-width: 0; font: inherit; font-size: 19px; padding: 13px 14px; border-radius: 12px; border: 2px solid #D7E0DC; background: #fff; color: #12302B; }
+.pass-stub input:focus { border-color: #0E4D64; outline: none; }
+.pass-stub button { border: 0; border-radius: 12px; padding: 0 18px; background: #C0266D; color: #fff; font-weight: 700; font-size: 17px; }
+.pass-stub .err { min-height: 18px; margin-top: 8px; font-size: 14px; color: #C0266D; }
+.barcode { height: 38px; margin-top: 12px; background: repeating-linear-gradient(90deg, #12302B 0 2px, transparent 2px 5px, #12302B 5px 6px, transparent 6px 9px, #12302B 9px 12px, transparent 12px 14px); opacity: .85; border-radius: 2px; }
+#lock.shake .pass { animation: shake .35s; }
+@keyframes shake { 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+/* ================= Accueil ================= */
+main { max-width: 640px; margin: 0 auto; padding-bottom: max(120px, env(safe-area-inset-bottom)); }
+.hero { padding: max(26px, env(safe-area-inset-top)) 16px 4px; }
+.hero h1 { font-size: clamp(60px, 19vw, 100px); font-weight: 800; letter-spacing: -0.05em; line-height: .85; }
+.hero p { color: var(--muted); font-size: 18px; margin-top: 10px; }
+
+.map { --sea: #D3E5E7; --island: #CFE0C9; --laurel: #2F5D3A; --peak: #A9C7A1; --wave: #8DB9C2; --atlantic: #0E4D64; --ink: #12302B; --muted: #557069; --sun: #F2A93B; --bougainvillea: #C0266D; --line: #CFDCD6;
+  margin-top: 16px; background: var(--sea); position: relative; overflow: hidden; }
+.map svg { width: 100%; height: auto; display: block; overflow: visible; }
+.land { fill: var(--island); stroke: var(--laurel); stroke-width: 3; stroke-linejoin: round; }
+.peak { fill: var(--peak); stroke: var(--laurel); stroke-width: 2.5; stroke-linejoin: round; }
+.wave { fill: none; stroke: var(--wave); stroke-width: 3; stroke-linecap: round; animation: bob 4s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(6px); } }
+.route-line { fill: none; stroke: var(--bougainvillea); stroke-width: 3.5; stroke-dasharray: 2 12; stroke-linecap: round; animation: march 1.2s linear infinite; opacity: 0; transition: opacity 1s; }
+.map.live .route-line { opacity: .9; }
+@keyframes march { to { stroke-dashoffset: -14; } }
+.sea-label { fill: var(--atlantic); font: italic 600 26px "Bricolage Grotesque", sans-serif; opacity: .8; }
+.compass text { fill: var(--atlantic); font: 800 22px "Bricolage Grotesque", sans-serif; text-anchor: middle; }
+.compass path { fill: var(--atlantic); }
+.plane { opacity: 0; transition: opacity .3s; } .plane.go { opacity: 1; } .plane path { fill: var(--atlantic); }
+
+.bubble { cursor: pointer; opacity: 0; transform: scale(.3); transform-box: fill-box; transform-origin: center; transition: opacity .4s, transform .5s cubic-bezier(.3,1.6,.5,1); }
+.map.live .bubble { opacity: 1; transform: scale(1); }
+.bubble .float { animation: float 3.6s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-5px); } }
+.bubble .ring { fill: none; stroke: #fff; stroke-width: 6; }
+.bubble.seen .ring { stroke: var(--sun); }
+.bubble .stem { stroke: var(--ink); stroke-width: 2.5; opacity: .5; }
+.bubble .spot { fill: var(--bougainvillea); stroke: #fff; stroke-width: 3; }
+.bubble .badge { fill: var(--bougainvillea); stroke: #fff; stroke-width: 3; }
+.bubble .badge-t { fill: #fff; font: 800 20px "Bricolage Grotesque", sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.bubble.seen .badge { fill: var(--laurel); }
+
+.cta { display: flex; gap: 12px; align-items: center; justify-content: center; width: calc(100% - 32px); margin: 18px 16px 0; padding: 18px; border: 0; border-radius: 18px; background: var(--bougainvillea); color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.cta svg { width: 22px; height: 22px; }
+.progress { margin: 14px 16px 0; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; color: var(--muted); font-size: 15px; }
+.progress .track { grid-column: 1 / -1; height: 8px; border-radius: 8px; background: var(--line); overflow: hidden; }
+.progress .track i { display: block; height: 100%; width: 0; background: var(--sun); border-radius: 8px; transition: width .8s; }
+
+h2.sec { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; padding: 40px 16px 4px; }
+p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
+
+.wall { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 16px; padding: 22px 18px 0; }
+.polaroid { border: 0; background: #FBFAF6; padding: 8px 8px 0; text-align: left; box-shadow: 0 6px 18px rgba(18,48,43,.16); position: relative; transition: transform .25s; }
+.polaroid:nth-child(4n+1) { transform: rotate(-2.2deg); }
+.polaroid:nth-child(4n+2) { transform: rotate(1.8deg) translateY(10px); }
+.polaroid:nth-child(4n+3) { transform: rotate(1.2deg); }
+.polaroid:nth-child(4n+4) { transform: rotate(-1.6deg) translateY(10px); }
+.polaroid:active { transform: scale(.97); }
+.polaroid .ph { aspect-ratio: 1; overflow: hidden; background: #DCE4E0; }
+.polaroid img { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.9) saturate(0) blur(3px); transition: filter 2.4s ease-out; }
+.polaroid.dev img { filter: none; }
+.polaroid .cap { font-family: "Caveat", cursive; font-size: 24px; line-height: 1; color: #1E2B28; padding: 9px 2px 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.polaroid .cap small { font-family: "Bricolage Grotesque", sans-serif; font-size: 12px; color: #6B7F79; }
+.stamp { position: absolute; top: -12px; right: -12px; width: 66px; height: 66px; border-radius: 50%; border: 3px double var(--bougainvillea); color: var(--bougainvillea); background: rgba(251,250,246,.92); display: grid; place-items: center; text-align: center; font-weight: 800; font-size: 10.5px; line-height: 1.1; text-transform: uppercase; letter-spacing: .02em; transform: rotate(14deg) scale(0); transition: transform .4s cubic-bezier(.3,1.7,.5,1); }
+.polaroid.seen .stamp { transform: rotate(14deg) scale(1); }
+
+/* Messages */
+.msg { background: var(--surface); border-radius: 18px; padding: 16px; margin: 12px 16px 0; }
+.msg h3 { font-size: 20px; margin-bottom: 8px; }
+.msg p { font-size: 18px; line-height: 1.5; }
+.msg audio, .msg video { width: 100%; border-radius: 12px; }
+
+/* Surprise */
+.gift { margin: 18px 16px 0; border-radius: 24px; background: var(--surface); padding: 28px 20px; text-align: center; }
+.gift svg { width: 96px; height: 96px; margin: 0 auto 10px; display: block; animation: wiggle 2.6s ease-in-out infinite; }
+@keyframes wiggle { 0%,80%,100% { transform: rotate(0); } 85% { transform: rotate(-8deg); } 90% { transform: rotate(8deg); } 95% { transform: rotate(-4deg); } }
+.gift p { font-size: 18px; line-height: 1.45; }
+.gift p small { display: block; color: var(--muted); font-size: 15px; margin-top: 6px; }
+.scratch-wrap { position: relative; margin: 18px 16px 0; border-radius: 22px; overflow: hidden; background: var(--surface); touch-action: none; user-select: none; -webkit-user-select: none; }
+.scratch-wrap .reveal img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+.scratch-wrap .reveal p { padding: 18px; font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+#scratch { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity .8s; }
+#scratch.done { opacity: 0; pointer-events: none; }
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 80; }
+
+/* Bouton son */
+.sound-btn { position: fixed; z-index: 30; right: 14px; bottom: max(14px, env(safe-area-inset-bottom)); width: 48px; height: 48px; opacity: .92; border-radius: 50%; border: 0; background: var(--ink); color: var(--bg); display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.sound-btn svg { width: 24px; height: 24px; }
+.eq { display: flex; gap: 3px; align-items: end; height: 18px; }
+.eq i { width: 4px; background: currentColor; border-radius: 2px; animation: eq 1s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: -.3s; } .eq i:nth-child(3) { animation-delay: -.6s; }
+@keyframes eq { 0%,100% { height: 5px; } 50% { height: 18px; } }
+.muted .eq i { animation: none; height: 4px; }
+
+/* ================= Table de polaroids ================= */
+#story { position: fixed; inset: 0; z-index: 50; display: none; color: #fff; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: radial-gradient(130% 90% at 50% 38%, #1C6C82 0%, #0E4D64 48%, #072C38 100%); }
+#story.on { display: block; }
+#story::before { content: ""; position: absolute; inset: 0; opacity: .07; pointer-events: none;
+  background-image: radial-gradient(#fff 1px, transparent 1.4px); background-size: 22px 22px; }
+.tb-top { position: absolute; left: 0; right: 0; top: 0; z-index: 30; padding: max(14px, env(safe-area-inset-top)) 14px 0; display: flex; align-items: flex-start; gap: 10px; }
+.tb-title { flex: 1; min-width: 0; }
+.sticker { display: inline-block; font-family: "Caveat", cursive; font-size: 32px; line-height: 1.05; color: #1E2B28; background: #F3DB8E; padding: 4px 16px 6px; transform: rotate(-3deg); box-shadow: 0 4px 12px rgba(0,0,0,.25); max-width: 100%; }
+.sticker.slap { animation: slap .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes slap { from { transform: rotate(-12deg) scale(1.5); opacity: 0; } to { transform: rotate(-3deg) scale(1); opacity: 1; } }
+.tb-sub { font-size: 14px; opacity: .8; margin: 10px 0 0 4px; }
+.tb-top button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(255,255,255,.16); color: #fff; display: grid; place-items: center; flex: none; }
+.tb-top button svg { width: 22px; height: 22px; }
+.voice { display: inline-flex; gap: 8px; align-items: center; margin: 10px 0 0 4px; padding: 6px 12px; border-radius: 30px; background: rgba(255,255,255,.18); font-size: 14px; font-weight: 600; }
+
+.stack { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top) + 104px); bottom: calc(env(safe-area-inset-bottom) + 96px); display: grid; place-items: center; }
+.pcard { position: absolute; width: min(80vw, 360px, calc((100svh - 250px) * .74)); max-height: 100%; touch-action: none; will-change: transform; cursor: grab;
+  transition: transform .45s cubic-bezier(.2,.8,.3,1.1), opacity .45s; }
+.pcard.drag { transition: none; cursor: grabbing; }
+.pcard.under { pointer-events: none; }
+.pcard .inner { position: relative; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.3,.7,.3,1); }
+.pcard.flipped .inner { transform: rotateY(180deg); }
+.pcard .front, .pcard .back { background: #FBFAF6; -webkit-backface-visibility: hidden; backface-visibility: hidden; box-shadow: 0 22px 44px rgba(0,0,0,.4); }
+.pcard .front { padding: 12px 12px 0; }
+.pcard .ph { aspect-ratio: 4/5; overflow: hidden; background: #26302E; position: relative; }
+.pcard.land .ph { aspect-ratio: 4/3; }
+.pcard .ph img, .pcard .ph video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.pcard .cap { font-family: "Caveat", cursive; font-size: 30px; line-height: 1; color: #1E2B28; padding: 12px 4px 16px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.pcard .cap small { font-family: "Bricolage Grotesque", sans-serif; font-size: 13px; color: #6B7F79; white-space: nowrap; }
+.pcard .back { position: absolute; inset: 0; overflow: hidden; transform: rotateY(180deg); padding: 30px 22px 44px; display: flex; flex-direction: column; justify-content: center; gap: 18px;
+  color: #1E2B28; background: #FBFAF6 repeating-linear-gradient(transparent 0 39px, #D5E2E6 39px 40px); }
+.pcard .back p { font-family: "Caveat", cursive; font-size: 34px; line-height: 1.15; overflow-wrap: anywhere; }
+.pcard .back small { font-size: 14px; color: #6B7F79; }
+.pcard .back .sign { position: absolute; right: 22px; bottom: 18px; font-family: "Caveat", cursive; font-style: normal; font-size: 22px; color: #C0266D; transform: rotate(-4deg); }
+.group-label { fill: var(--bougainvillea); font: 600 34px "Caveat", cursive; }
+.shout { position: absolute; z-index: 35; left: 50%; top: 42%; pointer-events: none; white-space: nowrap; font-family: "Caveat", cursive; font-size: 40px; color: #F3DB8E; text-shadow: 0 3px 14px rgba(0,0,0,.45); animation: shout 1.4s ease-out forwards; }
+@keyframes shout { 0% { opacity: 0; transform: translate(-50%, 20px) rotate(-6deg) scale(.7); } 25% { opacity: 1; transform: translate(-50%, 0) rotate(-6deg) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -70px) rotate(-6deg) scale(1); } }
+.pcard .tape { position: absolute; top: -14px; left: 50%; width: 96px; height: 28px; margin-left: -48px; background: rgba(243,219,142,.75); transform: rotate(-4deg); z-index: 2; }
+.pcard .snd { position: absolute; right: 10px; bottom: 10px; padding: 6px 10px; border-radius: 20px; background: rgba(0,0,0,.55); font-size: 13px; font-weight: 600; color: #fff; }
+
+.tb-bottom { position: absolute; left: 0; right: 0; bottom: 0; z-index: 30; padding: 0 16px max(22px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: 52px 1fr 52px; align-items: center; gap: 10px; }
+.tb-bottom button { width: 52px; height: 52px; border-radius: 50%; border: 0; background: rgba(255,255,255,.16); color: #fff; display: grid; place-items: center; }
+.tb-bottom button:disabled { opacity: .3; }
+.tb-bottom button svg { width: 24px; height: 24px; }
+.tb-hint { text-align: center; font-size: 15px; line-height: 1.35; opacity: .85; }
+.tb-end { position: absolute; inset: 0; z-index: 25; display: grid; place-items: center; text-align: center; padding: 24px; background: rgba(7,44,56,.7); }
+.tb-end h3 { font-family: "Caveat", cursive; font-size: 56px; line-height: 1; }
+.tb-end p { white-space: pre-line; font-size: 18px; opacity: .85; margin: 12px 0 22px; }
+.tb-end button { border: 0; border-radius: 16px; padding: 16px 24px; background: #F3DB8E; color: #1E2B28; font-weight: 800; font-size: 18px; }
+
+
+/* ================= Passeport (accueil) ================= */
+.hero .kicker { font-family: "Caveat", cursive; font-size: 30px; color: var(--bougainvillea); transform: rotate(-2deg); display: inline-block; }
+.levels { display: grid; gap: 22px; padding: 22px 16px 0; }
+.lvl { position: relative; border: 0; width: 100%; text-align: left; padding: 0; border-radius: 24px; overflow: hidden; background: var(--surface); box-shadow: 0 8px 24px rgba(18,48,43,.12); }
+.lvl .cover { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3px; height: 150px; background: var(--line); }
+.lvl .cover img { width: 100%; height: 150px; object-fit: cover; }
+.lvl .body { padding: 16px 18px 20px; }
+.lvl .num { font-weight: 800; font-size: 15px; color: var(--t); }
+.lvl h2 { font-size: clamp(40px, 12vw, 56px); font-weight: 800; letter-spacing: -0.045em; line-height: .9; margin-top: 4px; }
+.lvl .meta { color: var(--muted); font-size: 15px; margin-top: 8px; }
+.lvl .bar { height: 8px; border-radius: 8px; background: var(--line); overflow: hidden; margin-top: 14px; }
+.lvl .bar i { display: block; height: 100%; background: var(--t); border-radius: 8px; }
+.lvl .go { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 10px 16px; border-radius: 30px; background: var(--t); color: #fff; font-weight: 700; font-size: 16px; }
+.lvl.locked .cover img { filter: grayscale(1) blur(6px) brightness(1.1); }
+.lvl.locked .go { background: var(--line); color: var(--muted); }
+.lvl .lock { position: absolute; top: 0; left: 0; right: 0; height: 150px; display: grid; place-items: center; }
+.lvl .lock svg { width: 54px; height: 54px; color: #fff; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+.lvl.locked .lock svg { animation: wiggle 3.2s ease-in-out infinite; }
+.lvl .pstamp { position: absolute; top: 112px; right: 16px; width: 104px; height: 104px; border-radius: 50%; border: 4px double var(--t); color: var(--t); background: rgba(251,250,246,.94);
+  display: grid; place-items: center; text-align: center; font-weight: 800; font-size: 13px; line-height: 1.1; transform: rotate(-12deg); }
+.lvl .pstamp b { display: block; font-size: 20px; letter-spacing: -0.02em; }
+.lvl .pstamp.new { animation: stampIn .6s cubic-bezier(.3,1.5,.5,1) .3s both; }
+@keyframes stampIn { from { transform: rotate(-30deg) scale(2.4); opacity: 0; } to { transform: rotate(-12deg) scale(1); opacity: 1; } }
+.lvl.soon { background: transparent; box-shadow: none; border: 3px dashed var(--line); }
+.lvl.soon .body { padding: 22px 18px; }
+.lvl.soon h2 { color: var(--muted); }
+
+/* ================= Vue d'un niveau ================= */
+.lv-top { display: flex; align-items: center; gap: 10px; padding: max(14px, env(safe-area-inset-top)) 12px 0; }
+.lv-top button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: var(--surface); border-radius: 30px; padding: 10px 16px 10px 12px; font-weight: 700; font-size: 15px; box-shadow: 0 2px 8px rgba(18,48,43,.1); }
+.lv-top button svg { width: 18px; height: 18px; }
+#level .hero { padding-top: 14px; }
+#level .hero .num { font-weight: 800; color: var(--t); font-size: 16px; }
+#level .cta { background: var(--t); }
+.ref-sticker { display: inline-block; margin-top: 12px; font-family: "Caveat", cursive; font-size: 28px; line-height: 1.1; color: #1E2B28; background: #F3DB8E; padding: 4px 14px 6px; transform: rotate(-3deg); box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+.villes text { fill: var(--muted); font: 600 22px "Bricolage Grotesque", sans-serif; }
+.villes circle { fill: var(--muted); }
+.bus rect { fill: #F2A93B; stroke: #12302B; stroke-width: 2; } .bus .win { fill: #D3E5E7; stroke: none; } .bus circle { fill: #12302B; }
+.tree { fill: var(--peak); stroke: var(--laurel); stroke-width: 2; stroke-linejoin: round; } .trunk { fill: var(--laurel); }
+.bw { fill: #fff; stroke: var(--atlantic); stroke-width: 2.5; stroke-linejoin: round; } .bw2 { fill: none; stroke: var(--wave); stroke-width: 3; stroke-linecap: round; }
+.d-vague { animation: bob 3s ease-in-out infinite; }
+.lh { fill: #fff; stroke: #12302B; stroke-width: 2; } .lhr { fill: #C0266D; } .beam { fill: #F3DB8E; opacity: .7; animation: blink 2.4s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .1; } }
+.castle { fill: #E8D7AE; stroke: #7A5E32; stroke-width: 2; stroke-linejoin: round; fill-rule: evenodd; }
+.sun circle { fill: var(--sun); } .sun path { stroke: var(--sun); stroke-width: 4; stroke-linecap: round; }
+.d-soleil { animation: spin 24s linear infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.boat { fill: #1F6FB2; stroke: #12302B; stroke-width: 2; } .boat2 { fill: #F2A93B; } .sail { fill: #fff; stroke: #12302B; stroke-width: 2; stroke-linejoin: round; }
+.d-bateau { animation: rock 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; }
+@keyframes rock { 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+.deco-t { fill: var(--muted); font: italic 600 22px "Bricolage Grotesque", sans-serif; }
+.plateau { fill: #BFD3A8; stroke: none; }
+.cliff { fill: none; stroke: #9A7A4A; stroke-width: 7; stroke-linecap: round; stroke-dasharray: 1 9; }
+.beach { fill: #F1DDA9; }
+.avenue { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; opacity: .85; }
+.hw { fill: #FBFAF6; stroke: #B9A88A; stroke-width: 1; }
+.port { fill: none; stroke: #8A9A96; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.funi { stroke: #12302B; stroke-width: 2.5; stroke-dasharray: 4 3; }
+.funi-car rect { fill: #F2A93B; stroke: #12302B; stroke-width: 1.5; }
+.surf { fill: #C0266D; } .surfer { fill: #12302B; } .surfer-b { stroke: #12302B; stroke-width: 2.5; stroke-linecap: round; }
+.map-label { fill: var(--atlantic); font: 600 24px "Caveat", cursive; }
+.map-label.sm { font-size: 20px; fill: var(--muted); }
+.sign .post { fill: #8A6B3A; }
+.sign .board { fill: #F3DB8E; stroke: #8A6B3A; stroke-width: 2; } .sign .b2 { fill: #FBE7B4; }
+.sign text { fill: #1E2B28; font: 700 13.5px "Bricolage Grotesque", sans-serif; }
+.nazare-title { fill: var(--laurel); font: 600 54px "Caveat", cursive; opacity: .55; }
+.sea-bg { fill: var(--sea); }
+.road { fill: none; stroke: #fff; stroke-width: 6; stroke-linecap: round; opacity: .8; }
+.river { fill: var(--sea); stroke: var(--wave); stroke-width: 1.5; }
+.bridge { stroke: #8A9A96; stroke-width: 6; stroke-linecap: round; }
+.cliffs { fill: #E2A35B; stroke: #B5772E; stroke-width: 2; }
+.stack { fill: #E2A35B; stroke: #B5772E; stroke-width: 2; }
+.otree { fill: #7FA65A; stroke: var(--laurel); stroke-width: 2; } .orange { fill: #F2A93B; }
+.pool { fill: #6EC6E6; stroke: #2B8FB5; stroke-width: 2; }
+.slide { fill: none; stroke-width: 7; stroke-linecap: round; } .s1 { stroke: #F07B2B; } .s2 { stroke: #2B8FD9; } .s3 { stroke: #58B85C; }
+.disco circle { fill: #C9D3E0; stroke: #12302B; stroke-width: 2; } .disco path { stroke: #12302B; stroke-width: 1; fill: none; }
+.disco { animation: spin 6s linear infinite; transform-box: fill-box; transform-origin: center; }
+.disco-cord { stroke: #12302B; stroke-width: 2; }
+.mtn { fill: #8FAE7E; stroke: var(--laurel); stroke-width: 2.5; stroke-linejoin: round; } .mtn-top { fill: #B8A27E; }
+.cloud ellipse { fill: #fff; opacity: .92; } .cloud { animation: drift 7s ease-in-out infinite; }
+@keyframes drift { 50% { transform: translateX(10px); } }
+.laurel { fill: #4F8A4A; stroke: #2F5D3A; stroke-width: 1.5; } .laurel2 { fill: #6EA35C; }
+.levada { fill: none; stroke: #4FA3C7; stroke-width: 3.5; stroke-dasharray: 8 5; stroke-linecap: round; animation: march 1.6s linear infinite; }
+.santana { fill: #fff; stroke: #C0266D; stroke-width: 2.5; stroke-linejoin: round; } .santana-d { fill: #C0266D; }
+.cow { fill: #8A5A3A; } .cow-s { fill: #F3E3C9; } .cow-l, .cow-h { stroke: #3A2A1E; stroke-width: 2; stroke-linecap: round; }
+.black-sand { fill: #3A3A3A; } .npool { fill: #6EC6E6; stroke: #2B8FB5; stroke-width: 1.5; }
+.cliffm { fill: #7A6A55; } .fall { stroke: #8FD3F0; stroke-width: 2.5; stroke-dasharray: 5 4; animation: fallw .6s linear infinite; } @keyframes fallw { to { stroke-dashoffset: -9; } }
+.road-m { stroke: #fff; stroke-width: 5; stroke-linecap: round; }
+.runway { fill: #8A9A96; } .runway-l { stroke: #fff; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.dolphin path { fill: #5C7C8A; } .dolphin { animation: bob 2.6s ease-in-out infinite; }
+.azu rect { fill: #FBFAF6; stroke: #2C5AA0; stroke-width: 1.5; } .azu path { fill: none; stroke: #2C5AA0; stroke-width: 2; } .azu circle { fill: #2C5AA0; } .azu { opacity: .9; }
+.bridge25 .deck { stroke: #C9372C; stroke-width: 6; stroke-linecap: round; } .bridge25 .tower { stroke: #C9372C; stroke-width: 5; } .bridge25 .cable { fill: none; stroke: #C9372C; stroke-width: 2; }
+.ped { fill: #D8CFC0; stroke: #8A7A5E; } .cristo { stroke: #D8CFC0; stroke-width: 5; stroke-linecap: round; } .cristo-h { fill: #D8CFC0; }
+.belem { fill: #EDE2C6; stroke: #9A8457; stroke-width: 1.5; } .belem-t { fill: #EDE2C6; stroke: #9A8457; stroke-width: 1.5; }
+.tram-line { fill: none; stroke: #12302B; stroke-width: 1.5; stroke-dasharray: 3 3; opacity: .6; }
+.tram28 rect { fill: #F2C230; stroke: #12302B; stroke-width: 1.8; } .tram28 .tw { fill: #D3E5E7; stroke: none; } .tram28 circle { fill: #12302B; } .tram28 .pole { stroke: #12302B; stroke-width: 1.8; }
+.palm-t { fill: none; stroke: #8A6B3A; stroke-width: 4; stroke-linecap: round; } .palm { fill: none; stroke: #4F8A4A; stroke-width: 4; stroke-linecap: round; }
+.car rect, .car path { fill: var(--atlantic); }
+.car circle { fill: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .bubble { opacity: 1; transform: none; } .polaroid img { filter: none; } }
+</style>
+</head>
+<body>
+
+<!-- ============ Carte d'embarquement ============ -->
+<section id="lock">
+  <form class="pass" id="lockForm" autocomplete="off">
+    <div class="pass-top">
+      <div class="airline"><span>Air Souvenirs</span><span>Carte d'embarquement</span></div>
+      <div class="route">
+        <div><div class="code">ICI</div><div class="city">Ton canapé</div></div>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" transform="rotate(90 12 12)"/></svg>
+        <div class="to"><div class="code">PT</div><div class="city">Portugal, 4 escales</div></div>
+      </div>
+      <p class="stops">Escales : Lisbonne, Nazaré, Algarve, Madère</p>
+      <dl class="fields">
+        <div><dt>Passagère</dt><dd id="pName">Toi</dd></div>
+        <div><dt>Vol</dt><dd>PT 2026</dd></div>
+        <div><dt>Siège</dt><dd>Hublot</dd></div>
+      </dl>
+    </div>
+    <div class="pass-stub">
+      <label for="code" id="hint"></label>
+      <div class="row">
+        <input id="code" type="password" placeholder="Code" aria-label="Code" autocapitalize="none" autocorrect="off">
+        <button type="submit">Embarquer</button>
+      </div>
+      <p class="err" id="err" role="alert"></p>
+      <div class="barcode" aria-hidden="true"></div>
+    </div>
+  </form>
+</section>
+
+<!-- ============ Accueil : le passeport ============ -->
+<main id="app" hidden>
+  <section id="home">
+    <section class="hero">
+      <span class="kicker">Nos voyages</span>
+      <h1>Passeport</h1>
+      <p id="sub"></p>
+    </section>
+    <div class="levels" id="levels"></div>
+  </section>
+
+  <section id="level" hidden>
+    <div class="lv-top"><button id="backHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Passeport</button></div>
+    <section class="hero">
+      <span class="num" id="lvNum"></span>
+      <h1 id="lvName"></h1>
+      <span class="ref-sticker" id="lvRef" hidden></span>
+      <p id="lvSub"></p>
+    </section>
+    <div class="map" id="map"></div>
+    <button class="cta" id="playAll"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg><span id="playLabel">Lancer</span></button>
+    <div class="progress"><span id="progText"></span><span id="progNum"></span><div class="track"><i id="progBar"></i></div></div>
+
+    <h2 class="sec">Les souvenirs</h2>
+    <p class="sec-sub">Touche une photo pour l'ouvrir.</p>
+    <div class="wall" id="wall"></div>
+
+    <div id="finale" hidden>
+      <h2 class="sec" id="surpriseTitle">Une dernière chose</h2>
+      <div class="gift" id="gift">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="16" y="40" width="68" height="48" rx="6" fill="var(--bougainvillea)"/><rect x="10" y="28" width="80" height="16" rx="5" fill="var(--bougainvillea)"/><rect x="45" y="28" width="10" height="60" fill="var(--sun)"/><path d="M50 28c-6-14-24-16-22-4 1 6 16 5 22 4zm0 0c6-14 24-16 22-4-1 6-16 5-22 4z" fill="var(--sun)"/></svg>
+        <p id="giftText"></p>
+      </div>
+      <div id="scratchBox" hidden>
+        <p class="sec-sub">Gratte avec ton doigt.</p>
+        <div class="scratch-wrap"><div class="reveal" id="reveal"></div><canvas id="scratch"></canvas></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<button class="sound-btn" id="soundBtn" aria-label="Couper le son" hidden><span class="eq"><i></i><i></i><i></i></span></button>
+
+<!-- ============ Table de polaroids ============ -->
+<div id="story" role="dialog" aria-modal="true" aria-label="Souvenirs">
+  <div class="tb-top">
+    <div class="tb-title">
+      <span class="sticker" id="stT"></span>
+      <p class="tb-sub" id="stL"></p>
+      <div class="voice" id="voiceChip" hidden><span class="eq"><i></i><i></i><i></i></span>Vocal</div>
+    </div>
+    <button id="stSound" aria-label="Son"></button>
+    <button id="stClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="stack" id="stack"></div>
+  <div class="tb-bottom">
+    <button id="stPrev" aria-label="Reprendre la photo d'avant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+    <p class="tb-hint" id="stHint">Glisse pour lancer la photo,<br>touche pour la retourner.</p>
+    <button id="stNext" aria-label="Photo suivante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="tb-end" id="stEnd" hidden><div><h3>Fin du voyage du groupe de Madère.</h3><p>Il reste une dernière chose à ouvrir.</p><button id="toGift">Voir la surprise</button></div></div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const C = CONFIG;
+const el = (tag, props = {}, kids = []) => { const e = Object.assign(document.createElement(tag), props); kids.forEach(k => e.append(k)); return e; };
+const isVideo = (s) => /\.(mp4|mov|webm)$/i.test(s);
+const srcOf = (m) => typeof m === "string" ? m : m.src;
+const poster = (m) => { const s = srcOf(m); return isVideo(s) ? s.replace(/\.\w+$/, ".jpg") : s; };
+const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const f = (n) => n.toFixed(1);
+const playable = C.voyages.filter((v) => v.chapitres.length);
+let CUR = null;   // le voyage ouvert
+
+/* ================= Son ================= */
+const Sound = {
+  ctx: null, amb: null, song: null, muted: false, ducked: false, base: 0.22,
+  // Débloque l'audio dans le geste « Embarquer » (obligatoire sur iPhone), sans rien jouer
+  unlock() {
+    this.song = new Audio(); this.song.loop = true; this.song.volume = 0;
+    this.song.play().catch(() => {}); this.song.pause();
+    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  },
+  target() { return this.muted ? 0 : (this.ducked ? 0.2 : 1) * 0.3; },
+  fade(to, ms, done) {
+    clearInterval(this._fade); const s = this.song, from = s.volume, t0 = performance.now();
+    this._fade = setInterval(() => { const k = Math.min(1, (performance.now() - t0) / ms); s.volume = from + (to - from) * k; if (k === 1) { clearInterval(this._fade); done && done(); } }, 30);
+  },
+  // Musique des niveaux : se lance en entrant dans un niveau, s'arrête au passeport
+  play(src) {
+    $("#soundBtn").hidden = false;
+    if (!src || !this.song) return;
+    if (this.cur !== src) { this.cur = src; this.song.src = src; this.song.volume = 0; }
+    this.song.play().catch(() => {});
+    this.fade(this.target(), 1200);
+  },
+  stop() {
+    $("#soundBtn").hidden = true;
+    if (this.song) this.fade(0, 600, () => this.song.pause());
+  },
+  apply() {
+    const v = this.muted ? 0 : this.ducked ? 0.2 : 1;
+    if (this.song && !this.song.paused) this.fade(this.target(), 250);
+    document.body.classList.toggle("muted", this.muted);
+    $("#soundBtn").setAttribute("aria-label", this.muted ? "Remettre le son" : "Couper le son");
+    $("#stSound").innerHTML = this.muted
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4zM22 9l-6 6M16 9l6 6"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
+    Story.syncMute();
+  },
+  toggle() { this.muted = !this.muted; this.apply(); },
+  duck(on) { this.ducked = on; this.apply(); },
+  // Bruitages : photo lancée, photo retournée
+  fx(kind) {
+    if (this.muted) return;
+    try {
+      const ctx = this.ctx || (this.ctx = new (window.AudioContext || window.webkitAudioContext)());
+      const len = ctx.sampleRate * 0.35, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource(); src.buffer = buf;
+      const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.2;
+      const g = ctx.createGain(), t = ctx.currentTime;
+      if (kind === "flip") { bp.frequency.setValueAtTime(2500, t); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12); }
+      else { bp.frequency.setValueAtTime(500, t); bp.frequency.exponentialRampToValueAtTime(2200, t + 0.28); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.06); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.32); }
+      src.connect(bp).connect(g).connect(ctx.destination); src.start(t); src.stop(t + 0.36);
+    } catch (e) {}
+  },
+  // Petite mélodie boîte à musique (Joyeux anniversaire)
+  birthday() {
+    if (this.muted) return;
+    const ctx = this.ctx || (this.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    const N = { G4: 392, A4: 440, B4: 493.9, C5: 523.3, D5: 587.3, E5: 659.3, F5: 698.5, G5: 784 };
+    const tune = [["G4",.75],["G4",.25],["A4",1],["G4",1],["C5",1],["B4",2],["G4",.75],["G4",.25],["A4",1],["G4",1],["D5",1],["C5",2],["G4",.75],["G4",.25],["G5",1],["E5",1],["C5",1],["B4",1],["A4",2],["F5",.75],["F5",.25],["E5",1],["C5",1],["D5",1],["C5",3]];
+    let t = ctx.currentTime + 0.1; const beat = 0.36;
+    this.duck(true);
+    tune.forEach(([n, d]) => {
+      [1, 2].forEach((h) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = h === 1 ? "triangle" : "sine"; o.frequency.value = N[n] * h;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(h === 1 ? 0.22 : 0.06, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + Math.max(0.5, d * beat * 1.6));
+        o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + d * beat * 1.7 + 0.1);
+      });
+      t += d * beat;
+    });
+    setTimeout(() => this.duck(false), (t - ctx.currentTime) * 1000 + 600);
+  }
+};
+$("#soundBtn").onclick = () => Sound.toggle();
+$("#stSound").onclick = (e) => { e.stopPropagation(); Sound.toggle(); };
+
+/* ================= Progression ================= */
+const seen = new Set(store.get("groupe-vus") || []);
+const stamped = new Set(store.get("groupe-tampons") || []);
+const seenCount = (v) => v.chapitres.filter((_, i) => seen.has(v.id + ":" + i)).length;
+const isDone = (v) => v.chapitres.length > 0 && seenCount(v) === v.chapitres.length;
+function isUnlocked(v) {
+  const k = playable.indexOf(v);
+  return k <= 0 || playable.slice(0, k).every(isDone);
+}
+function nextOf(v) { return playable[playable.indexOf(v) + 1] || null; }
+function markSeen(v, i) {
+  const key = v.id + ":" + i;
+  if (seen.has(key)) return;
+  seen.add(key); store.set("groupe-vus", [...seen]); refreshLevel();
+}
+function refreshLevel() {
+  const v = CUR; if (!v) return;
+  const n = v.chapitres.length, s = seenCount(v);
+  $("#progBar").style.width = (s / n * 100) + "%";
+  $("#progNum").textContent = s + " / " + n;
+  const nx = nextOf(v);
+  $("#progText").textContent = s === n ? (v.final ? "Tout vu. La surprise est débloquée." : "Niveau terminé" + (nx ? ", " + nx.nom + " est débloqué." : ".")) : "Souvenirs revus";
+  document.querySelectorAll("#level [data-ch]").forEach((e) => e.classList.toggle("seen", seen.has(v.id + ":" + e.dataset.ch)));
+  if (v.final) {
+    const left = n - s;
+    if (left > 0) $("#giftText").innerHTML = "Le groupe de Madère t'a laissé un cadeau.<small>Il s'ouvre quand tu auras revu tous les souvenirs. Encore " + left + ".</small>";
+    else if ($("#scratchBox").hidden) { $("#gift").hidden = true; $("#scratchBox").hidden = false; setupScratch(); }
+  }
+}
+
+/* ================= Passeport ================= */
+const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3z"/></svg>';
+function buildHome() {
+  const box = $("#levels"); box.innerHTML = "";
+  const total = playable.reduce((a, v) => a + v.chapitres.reduce((b, c) => b + c.medias.length, 0), 0);
+  $("#sub").textContent = C.voyages.map((v) => v.nom).join(", ") + ". " + total + " souvenirs.";
+  C.voyages.forEach((v, i) => {
+    const card = el("button", { className: "lvl" }); card.style.setProperty("--t", v.teinte);
+    if (!v.chapitres.length) {
+      card.classList.add("soon"); card.disabled = true;
+      card.innerHTML = `<div class="body"><span class="num">Niveau ${i + 1}</span><h2>${v.nom}</h2><p class="meta">En préparation.</p></div>`;
+      box.append(card); return;
+    }
+    const unlocked = isUnlocked(v), done = unlocked && isDone(v), s = unlocked ? seenCount(v) : 0, n = v.chapitres.length;
+    const covers = v.chapitres.slice(0, 3).map((c) => `<img src="${poster(c.medias[0])}" alt="" loading="lazy">`).join("");
+    const prev = playable[playable.indexOf(v) - 1];
+    card.innerHTML = `<div class="cover">${covers}</div>
+      <div class="body"><span class="num">Niveau ${i + 1}</span><h2>${v.nom}</h2>
+      <p class="meta">${v.dates ? v.dates + ", " : ""}${n} moments</p>
+      <div class="bar"><i style="width:${s / n * 100}%"></i></div>
+      <span class="go">${!unlocked ? "Termine " + prev.nom + " pour débloquer" : done ? "Revoir" : s ? "Continuer" : "Jouer"}</span></div>`;
+    if (!unlocked) { card.classList.add("locked"); card.append(el("div", { className: "lock", innerHTML: LOCK_SVG })); }
+    if (done) {
+      const st = el("div", { className: "pstamp", innerHTML: `<span><b>${v.nom}</b>terminé<br>${v.dates.replace(/^\D+/, "") || "2026"}</span>` });
+      if (!stamped.has(v.id)) { st.classList.add("new"); stamped.add(v.id); store.set("groupe-tampons", [...stamped]); Sound.fx("flip"); }
+      card.append(st);
+    }
+    card.onclick = () => unlocked ? openLevel(v) : (card.animate([{ transform: "translateX(-8px)" }, { transform: "translateX(8px)" }, { transform: "none" }], { duration: 300 }));
+    box.append(card);
+  });
+  // bonus : le prochain voyage
+  const bonus = el("button", { className: "lvl soon", disabled: true });
+  bonus.innerHTML = `<div class="body"><span class="num" style="color:var(--muted)">Niveau ${C.voyages.length + 1}</span><h2>???</h2><p class="meta">Le prochain voyage.</p></div>`;
+  box.append(bonus);
+}
+function showHome() {
+  Story.close();
+  $("#level").hidden = true; $("#home").hidden = false; CUR = null; Sound.stop();
+  buildHome(); scrollTo(0, 0);
+}
+$("#backHome").onclick = showHome;
+
+/* ================= Niveau ================= */
+function openLevel(v) {
+  CUR = v;
+  const i = C.voyages.indexOf(v);
+  $("#level").style.setProperty("--t", v.teinte);
+  $("#lvNum").textContent = "Niveau " + (i + 1);
+  $("#lvName").textContent = v.nom;
+  $("#lvRef").hidden = !v.ref; $("#lvRef").textContent = v.ref || "";
+  $("#lvSub").textContent = (v.groupe ? v.groupe + ", " : "") + v.chapitres.length + " moments, " + v.chapitres.reduce((a, c) => a + c.medias.length, 0) + " souvenirs.";
+  $("#playLabel").textContent = "Lancer " + v.nom;
+  $("#finale").hidden = !v.final;
+  $("#home").hidden = true; $("#level").hidden = false; scrollTo(0, 0);
+  Sound.play(v.musique || C.musique);
+  $("#map").classList.remove("live");
+  drawMap(v); buildWall(v); refreshLevel();
+  setTimeout(animateMap, 300);
+}
+$("#playAll").onclick = () => Story.open(CUR, 0);
+
+/* ================= Carte ================= */
+function smooth(pts, closed) {
+  const n = pts.length; let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
+  const last = closed ? n : n - 1;
+  for (let i = 0; i < last; i++) {
+    const g = (k) => closed ? pts[(k + n) % n] : pts[Math.max(0, Math.min(n - 1, k))];
+    const p0 = g(i - 1), p1 = g(i), p2 = g(i + 1), p3 = g(i + 2);
+    d += `C${f(p1[0] + (p2[0] - p0[0]) / 6)},${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)},${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])},${f(p2[1])}`;
+  }
+  return d + (closed ? "Z" : "");
+}
+const PLANE = '<g transform="rotate(90)"><path transform="scale(1.6) translate(-12,-12)" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></g>';
+const TRAMV = '<g class="tram28" transform="scale(1.3)"><rect x="-17" y="-10" width="34" height="18" rx="4"/><rect class="tw" x="-13" y="-6" width="8" height="7" rx="1"/><rect class="tw" x="-3" y="-6" width="8" height="7" rx="1"/><rect class="tw" x="7" y="-6" width="6" height="7" rx="1"/><circle cx="-9" cy="9" r="3"/><circle cx="9" cy="9" r="3"/></g>';
+const BUS = '<g class="bus" transform="scale(1.4)"><rect x="-24" y="-18" width="48" height="24" rx="5"/><rect class="win" x="-20" y="-14" width="9" height="8" rx="1.5"/><rect class="win" x="-8" y="-14" width="9" height="8" rx="1.5"/><rect class="win" x="4" y="-14" width="9" height="8" rx="1.5"/><rect class="win" x="15" y="-14" width="6" height="12" rx="1.5"/><circle cx="-13" cy="7" r="5"/><circle cx="13" cy="7" r="5"/></g>';
+const DECOS = {
+  arbre: '<path class="tree" d="M0,-24 L13,-2 L6,-2 L15,13 L-15,13 L-6,-2 L-13,-2Z"/><rect class="trunk" x="-2.5" y="13" width="5" height="7"/>',
+  vague: '<path class="bw" d="M-34,14 C-26,-34 26,-36 30,-6 C18,-16 4,-10 8,4 C-6,-6 -18,4 -34,14Z"/><path class="bw2" d="M-40,18 q10,-8 20,0 t20,0 t20,0 t20,0"/>',
+  phare: '<path class="lh" d="M-7,18 L-4,-14 L4,-14 L7,18Z"/><path class="lhr" d="M-5.6,6 L5.6,6 L6.2,12 L-6.2,12Z M-4.6,-6 L4.6,-6 L5,0 L-5,0Z"/><rect class="lhr" x="-6" y="-20" width="12" height="6" rx="1"/><path class="beam" d="M6,-17 L40,-28 L40,-6Z"/>',
+  chateau: '<path class="castle" d="M-20,16 V-8 h7 v5 h5 v-5 h6 v5 h5 v-5 h6 v5 h5 v-5 h6 V16Z M-4,16 v-9 a4,4 0 0 1 8,0 v9Z"/>',
+  soleil: '<g class="sun"><circle r="16"/><path d="M0,-28v-8M0,28v8M-28,0h-8M28,0h8M-20,-20l-6,-6M20,-20l6,-6M-20,20l-6,6M20,20l6,6"/></g>',
+  bateau: '<path class="boat" d="M-24,0 L24,0 L16,10 L-18,10Z"/><path class="boat2" d="M-24,0 L-28,-10 L-20,0Z"/><path class="sail" d="M0,-2 L0,-26 L14,-4Z"/>',
+};
+
+/* ---------- Carte dessinée de Nazaré ---------- */
+function dessinNazare() {
+  // trait de côte : la falaise du Sítio en haut, la plage en arc, le port en bas
+  const coast = "M352,0 C338,60 300,120 262,168 L246,186 C262,198 292,206 322,214 C338,236 350,270 358,320 C364,370 366,420 360,470 C356,500 350,520 344,540 L300,548 L298,560 L352,556 C362,590 372,630 380,660 L720,660 L720,0 Z";
+  const beach = "M322,214 C338,236 350,270 358,320 C364,370 366,420 360,470 C356,500 350,520 344,540 L384,540 C394,500 402,450 402,400 C402,340 392,280 372,240 C362,228 346,220 336,216 Z";
+  const plateau = "M352,0 C338,60 300,120 262,168 L246,186 C262,198 292,206 322,214 C360,224 400,226 440,218 C470,200 490,150 498,100 C504,60 500,20 492,0 Z";
+  const rng = (n) => { let x = Math.sin(n * 91.7) * 10000; return x - Math.floor(x); };
+  // maisons de la ville basse et du Sítio
+  let houses = "";
+  const house = (x, y, k) => {
+    const w = 15 + rng(k) * 7, h = 10 + rng(k + 3) * 5, roof = ["#E0703B", "#D9822B", "#C9553A", "#E89A5B"][k % 4];
+    return `<g transform="translate(${f(x)},${f(y)})"><rect class="hw" x="${f(-w / 2)}" y="0" width="${f(w)}" height="${f(h)}"/><path fill="${roof}" d="M${f(-w / 2 - 2)},1 L0,-8 L${f(w / 2 + 2)},1Z"/></g>`;
+  };
+  let k = 0;
+  for (let y = 262; y < 528; y += 25) for (let x = 0; x < 6; x++) {
+    const xx = 418 + (y - 262) * 0.06 + x * 26 + (y / 25 % 2) * 12 + rng(k) * 4;
+    if (xx > 600 - (y > 450 ? 40 : 0)) continue;
+    if (Math.abs(xx - 462) < 14 && y > 300) continue;           // l'avenue
+    houses += house(xx, y + rng(k + 9) * 4, k++);
+  }
+  for (let y = 110; y < 192; y += 22) for (let x = 0; x < 5; x++) {
+    const xx = 334 + x * 24 + (y / 22 % 2) * 10 - (192 - y) * 0.3;
+    if (xx > 470 - (192 - y) * 0.4) continue;
+    houses += house(xx, y, k++);
+  }
+  const trees = [[560,40],[600,70],[640,36],[620,120],[665,90],[540,95],[690,160],[560,170],[640,200],[680,260],[640,300],[690,360],[650,420],[690,480],[620,560],[670,610],[540,240]]
+    .map(([x, y]) => `<g class="deco" transform="translate(${x},${y})">${DECOS.arbre}</g>`).join("");
+  const waves = [[60,30],[200,20],[120,330],[40,250],[230,300],[60,420],[250,480],[90,620],[200,640],[30,140]]
+    .map(([x, y], i) => `<path class="wave" style="animation-delay:-${i * .6}s" d="M${x},${y} q12,-12 24,0 t24,0 t24,0"/>`).join("");
+  const boats = [[386,300,"#1F6FB2"],[390,340,"#F2A93B"],[392,380,"#C0266D"],[388,420,"#2F5D3A"]]
+    .map(([x, y, c], i) => `<g transform="translate(${x},${y}) rotate(80)"><path fill="${c}" stroke="#12302B" stroke-width="1.6" d="M-14,0 L14,0 L10,6 L-11,6Z"/><path fill="#fff" d="M-14,0 L-17,-6 L-11,0Z"/></g>`).join("");
+  return `
+    ${waves}
+    <path class="land" d="${coast}"/>
+    <path class="plateau" d="${plateau}"/>
+    <path class="cliff" d="M246,186 C262,198 292,206 322,214 C360,224 400,226 440,218"/>
+    <path class="beach" d="${beach}"/>
+    <path class="beach" d="M352,0 C338,60 300,120 262,168 L276,170 C312,124 348,64 364,0 Z"/>
+    <path class="avenue" d="M468,262 C470,340 470,430 462,540"/>
+    ${trees}
+    ${houses}
+    ${boats}
+    <path class="port" d="M300,548 L298,560 L352,556 M352,556 C356,568 362,582 366,596"/>
+    <g class="deco" transform="translate(320,580)"><g class="d-bateau">${DECOS.bateau}</g></g>
+    <g class="deco" transform="translate(248,182) scale(.9)"><g class="d-phare">${DECOS.phare}</g></g>
+    <g class="deco" transform="translate(160,92) scale(1.5)"><g class="d-vague">${DECOS.vague}</g></g>
+    <g class="deco" transform="translate(130,64) rotate(-18) scale(.9)"><path class="surf" d="M-14,4 C-4,0 8,0 16,4 C8,7 -4,7 -14,4Z"/><circle class="surfer" cx="2" cy="-8" r="3.5"/><path class="surfer-b" d="M2,-4 L2,2 M-3,-1 L7,-1"/></g>
+    <path class="funi" d="M424,222 L446,262"/>
+    <g class="funi-car"><rect x="-6" y="-5" width="12" height="10" rx="2"/><animateMotion dur="5s" repeatCount="indefinite" path="M424,222 L446,262 L424,222"/></g>
+    <g class="deco" transform="translate(70,560)"><g class="d-soleil" style="transform:scale(.8)">${DECOS.soleil}</g></g>
+    <text class="map-label" x="230" y="44">Praia do Norte</text>
+    <text class="map-label" x="372" y="96">O Sítio</text>
+    <text class="map-label sm" x="452" y="240">ascensor</text>
+    <text class="map-label" x="282" y="330" transform="rotate(84 282 330)">Praia da Nazaré</text>
+    <text class="map-label sm" x="370" y="590">porto</text>
+    <g class="sign" transform="translate(452,604)">
+      <rect class="post" x="-3" y="-22" width="6" height="64"/>
+      <path class="board" d="M-150,-22 h138 l10,10 l-10,10 h-138Z"/><text x="-143" y="-7">São Martinho 13 km</text>
+      <path class="board b2" d="M-150,10 h138 l10,10 l-10,10 h-138Z"/><text x="-143" y="25">Óbidos 40 km</text>
+    </g>
+    <text class="map-label sm" x="610" y="650">Lisbonne ↓</text>
+    <text class="nazare-title" x="520" y="600" transform="rotate(-6 520 600)">Nazaré</text>`;
+}
+
+/* ---------- Carte dessinée de l'Algarve (Portimão, Alvor, Lagoa) ---------- */
+function dessinAlgarve() {
+  const rng = (n) => { let x = Math.sin(n * 57.3) * 10000; return x - Math.floor(x); };
+  // terre au nord, mer au sud ; falaises dorées le long de la côte, la rivière Arade à Portimão
+  const coast = "M0,0 L720,0 L720,470 C690,474 660,462 630,468 C600,474 580,470 560,476 L520,470 L500,452 L486,446 L470,452 C450,456 430,452 410,456 C380,462 350,456 320,462 C290,468 260,452 230,458 C200,462 180,452 150,458 C120,462 100,450 70,452 C40,454 20,448 0,452 Z";
+  const river = "M470,452 C474,400 468,340 480,280 C490,220 486,170 500,120 C506,96 520,70 540,40 L556,46 C536,80 522,104 516,128 C504,176 506,226 496,284 C486,342 494,404 496,452 Z";
+  const cliffs = "M0,452 C20,448 40,454 70,452 C100,450 120,462 150,458 C180,452 200,462 230,458 C260,452 290,468 320,462 C350,456 380,462 410,456 C430,452 450,456 470,452 L470,438 C440,440 400,434 360,440 C320,446 280,434 240,440 C200,446 160,434 120,440 C80,446 40,434 0,438 Z";
+  let houses = "";
+  const house = (x, y, k) => {
+    const w = 14 + rng(k) * 7, h = 10 + rng(k + 3) * 6, roof = ["#E0703B", "#D9822B", "#C9553A", "#E89A5B"][k % 4];
+    return `<g transform="translate(${f(x)},${f(y)})"><rect class="hw" x="${f(-w / 2)}" y="0" width="${f(w)}" height="${f(h)}"/><path fill="${roof}" d="M${f(-w / 2 - 2)},1 L0,-7 L${f(w / 2 + 2)},1Z"/></g>`;
+  };
+  let k = 0;
+  for (let y = 250; y < 420; y += 24) for (let x = 0; x < 6; x++) {           // Portimão / Praia da Rocha
+    const xx = 300 + x * 26 + (y / 24 % 2) * 12;
+    if (xx > 458 || (Math.abs(xx - 372) < 16 && Math.abs(y - 300) < 16)) continue;
+    houses += house(xx, y, k++);
+  }
+  for (let y = 380; y < 430; y += 22) for (let x = 0; x < 3; x++) houses += house(522 + x * 24 + (y / 22 % 2) * 10, y, k++);   // Ferragudo
+  for (let y = 360; y < 420; y += 22) for (let x = 0; x < 3; x++) houses += house(96 + x * 24 + (y / 22 % 2) * 10, y, k++);    // Alvor
+  // orangers et collines
+  const orange = (x, y) => `<g transform="translate(${x},${y})"><rect class="trunk" x="-2" y="6" width="4" height="8"/><circle class="otree" r="11"/><circle class="orange" cx="-4" cy="-2" r="2.4"/><circle class="orange" cx="4" cy="3" r="2.4"/><circle class="orange" cx="3" cy="-5" r="2.2"/></g>`;
+  const trees = [[60,80],[110,130],[60,200],[160,60],[200,170],[240,90],[120,260],[220,250],[280,190],[560,180],[660,140],[690,260],[560,300],[640,330],[600,400],[690,400],[350,120],[300,60]].map(([x, y]) => orange(x, y)).join("");
+  const stacks = [[150,486,22],[178,478,14],[196,492,18],[96,484,12],[300,492,16],[330,480,20],[360,494,12],[420,488,16],[560,494,14]]
+    .map(([x, y, h]) => `<path class="stack" d="M${x - h * .7},${y + 8} C${x - h * .8},${y - h} ${x - h * .2},${y - h * 1.3} ${x},${y - h * 1.2} C${x + h * .4},${y - h * 1.2} ${x + h * .8},${y - h * .6} ${x + h * .7},${y + 8}Z"/>`).join("");
+  const waves = [[40,520],[200,560],[340,540],[500,560],[640,520],[100,610],[420,610],[600,600],[260,500]]
+    .map(([x, y], i) => `<path class="wave" style="animation-delay:-${i * .6}s" d="M${x},${y} q12,-12 24,0 t24,0 t24,0"/>`).join("");
+  return `
+    <rect x="-50" y="-50" width="820" height="740" class="sea-bg"/>
+    ${waves}
+    <path class="land" d="${coast}"/>
+    <path class="road" d="M720,30 C640,70 560,90 500,140 C470,170 440,200 420,230"/>
+    <path class="road" d="M330,240 C300,200 240,180 160,190 C120,196 80,190 0,200"/>
+    <path class="river" d="${river}"/>
+    <path class="bridge" d="M462,330 L506,326"/>
+    <path class="cliffs" d="${cliffs}"/>
+    <path class="beach" d="M300,438 C330,432 370,440 400,434 L410,456 C380,462 350,456 320,462 Z"/>
+    ${stacks}
+    ${trees}
+    ${houses}
+    <g class="park" transform="translate(606,214)">
+      <ellipse class="pool" cx="0" cy="22" rx="34" ry="12"/>
+      <path class="slide s1" d="M-30,-30 C-10,-30 -20,0 0,0 C20,0 10,-20 26,-24"/>
+      <path class="slide s2" d="M-26,-40 C0,-20 -30,10 -6,18"/>
+      <path class="slide s3" d="M20,-40 C30,-10 10,4 18,18"/>
+    </g>
+    <g class="deco" transform="translate(406,392)"><g class="disco"><circle r="13"/><path d="M-13,0h26M0,-13v26M-9,-9l18,18M9,-9l-18,18"/></g><path class="disco-cord" d="M0,-13 V-28"/></g>
+    <g class="deco" transform="translate(80,70)"><g class="d-soleil">${DECOS.soleil}</g></g>
+    <g class="deco" transform="translate(520,560)"><g class="d-bateau">${DECOS.bateau}</g></g>
+    <g class="deco" transform="translate(250,600)"><g class="d-bateau" style="animation-delay:-1.4s">${DECOS.bateau}</g></g>
+    <text class="map-label" x="296" y="238">Portimão</text>
+    <text class="map-label sm" x="300" y="430">Praia da Rocha</text>
+    <text class="map-label sm" x="96" y="346">Alvor</text>
+    <text class="map-label sm" x="520" y="370">Ferragudo</text>
+    <text class="map-label sm" x="618" y="266">Lagoa</text>
+    <text class="map-label sm" x="490" y="430" transform="rotate(-86 490 430)">rio Arade</text>
+    <text class="map-label sm" x="600" y="22">Lisbonne ↑</text>
+    <text class="sea-label" x="470" y="628">Océan Atlantique</text>
+    <text class="nazare-title" x="40" y="300" transform="rotate(-6 40 300)">Algarve</text>`;
+}
+const DESSINS = { nazare: () => dessinNazare(), algarve: () => dessinAlgarve() };
+
+/* ---------- Carte dessinée de Madère ---------- */
+function dessinMadere(px, M) {
+  const rng = (n) => { let x = Math.sin(n * 73.1) * 10000; return x - Math.floor(x); };
+  const P = (lng, lat) => px(lng, lat);
+  const land = M.terre.map(([a, b]) => P(a, b));
+  const house = (x, y, k, sc = 1) => {
+    const w = (12 + rng(k) * 6) * sc, h = (8 + rng(k + 3) * 5) * sc, roof = ["#E0703B", "#D9822B", "#C9553A", "#E89A5B"][k % 4];
+    return `<g transform="translate(${f(x)},${f(y)})"><rect class="hw" x="${f(-w / 2)}" y="0" width="${f(w)}" height="${f(h)}"/><path fill="${roof}" d="M${f(-w / 2 - 2)},1 L0,${f(-7 * sc)} L${f(w / 2 + 2)},1Z"/></g>`;
+  };
+  // Funchal en amphithéâtre
+  let houses = "", k = 0;
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 9 - r; c++) {
+    const x = 500 + c * 20 + r * 12 + rng(k) * 4, y = 418 - r * 18 - Math.abs(c - 4) * 1.5;
+    houses += house(x, y, k++);
+  }
+  // quelques maisons à Porto Moniz, Seixal, Câmara de Lobos
+  [[96,108],[112,116],[300,146],[318,140],[440,410],[456,404]].forEach(([x, y]) => houses += house(x, y, k++, .9));
+  // maisons triangulaires de Santana
+  const santana = [[596,182],[614,176],[632,184]].map(([x, y]) => `<g transform="translate(${x},${y})"><path class="santana" d="M-9,10 L0,-12 L9,10Z"/><rect class="santana-d" x="-2.5" y="3" width="5" height="7"/></g>`).join("");
+  // forêt de lauriers (laurissilva) au nord
+  const laurel = (x, y, r) => `<g transform="translate(${x},${y})"><circle class="laurel" r="${r}"/><circle class="laurel2" cx="${-r * .4}" cy="${-r * .3}" r="${r * .55}"/></g>`;
+  let forest = "";
+  [[180,170],[205,150],[235,190],[260,172],[290,195],[330,180],[360,165],[390,190],[650,205],[680,220],[150,140],[170,200],[210,215],[380,215],[310,220]]
+    .forEach(([x, y], i) => forest += laurel(x, y, 9 + rng(i) * 5));
+  // montagnes centrales + mer de nuages
+  const mtn = [[430,302,60],[478,296,86],[528,300,110],[578,302,80],[622,306,56],[384,306,44],[660,308,40]]
+    .map(([x, y, h]) => `<path class="mtn" d="M${x - h * .8},${y} L${x},${y - h} L${x + h * .8},${y}Z"/><path class="mtn-top" d="M${x - h * .22},${y - h * .72} L${x},${y - h} L${x + h * .22},${y - h * .72} L${x + h * .08},${y - h * .64} L${x - h * .06},${y - h * .74}Z"/>`).join("");
+  const clouds = [[420,292,46],[490,300,60],[580,296,54],[650,302,36],[360,300,30]]
+    .map(([x, y, w], i) => `<g class="cloud" style="animation-delay:-${i * 1.3}s"><ellipse cx="${x}" cy="${y}" rx="${w}" ry="11"/><ellipse cx="${x - w * .35}" cy="${y - 7}" rx="${w * .35}" ry="10"/><ellipse cx="${x + w * .3}" cy="${y - 6}" rx="${w * .3}" ry="9"/></g>`).join("");
+  // levada : petit canal qui serpente
+  const levada = `<path class="levada" d="M250,260 C290,240 320,262 360,248 C400,234 420,256 452,246"/>`;
+  // la vache de Fanal
+  const cow = `<g transform="translate(222,196) scale(1.7)"><ellipse class="cow" cx="0" cy="0" rx="13" ry="8"/><circle class="cow-s" cx="-4" cy="-2" r="3"/><circle class="cow-s" cx="5" cy="2" r="2.5"/><ellipse class="cow" cx="14" cy="-5" rx="5" ry="4.5"/><path class="cow-l" d="M-8,6v7M-3,6v7M4,6v7M9,6v7"/><path class="cow-h" d="M12,-9 l-2,-4 M16,-9 l2,-4"/></g>`;
+  // piscines naturelles de Seixal (sable noir)
+  const seixal = `<path class="black-sand" d="M276,138 C290,128 310,126 330,130 L328,138 C312,134 292,136 278,144Z"/><ellipse class="npool" cx="290" cy="124" rx="9" ry="4"/><ellipse class="npool" cx="312" cy="121" rx="7" ry="3.5"/>`;
+  // la cascade dos Anjos qui tombe sur la route
+  const [cx, cy] = P(-17.1182, 32.6786);
+  const cascade = `<g transform="translate(${f(cx)},${f(cy - 18)})"><path class="cliffm" d="M-12,-20 h24 v26 h-24Z"/><path class="fall" d="M-4,-18 v24 M0,-18 v24 M4,-18 v24"/><path class="road-m" d="M-22,8 h44"/></g>`;
+  // phare de São Lourenço
+  const [lx, ly] = P(-16.66, 32.745);
+  // piste de l'aéroport
+  const [ax, ay] = P(-16.774, 32.694);
+  const runway = `<g transform="translate(${f(ax)},${f(ay)}) rotate(-38)"><rect class="runway" x="-34" y="-5" width="68" height="10" rx="2"/><path class="runway-l" d="M-28,0 h56"/></g>`;
+  const waves = [[90,10],[300,-10],[700,30],[880,120],[860,420],[120,300],[60,420],[300,540],[650,560],[860,520],[200,600],[520,620]]
+    .map(([x, y], i) => `<path class="wave" style="animation-delay:-${i * .6}s" d="M${x},${y} q12,-12 24,0 t24,0 t24,0"/>`).join("");
+  const dolphin = `<g class="dolphin" transform="translate(760,520)"><path d="M-18,4 C-10,-10 10,-12 18,0 C10,-4 0,-2 -6,2 L-2,8 L-10,4Z"/></g>`;
+  return `
+    ${waves}
+    <path class="land" d="${smooth(land, true)}"/>
+    ${levada}
+    ${forest}
+    ${mtn}
+    ${clouds}
+    ${seixal}
+    ${cow}
+    ${santana}
+    ${houses}
+    ${cascade}
+    ${runway}
+    <g class="deco" transform="translate(${f(lx)},${f(ly - 10)}) scale(.8)"><g class="d-phare">${DECOS.phare}</g></g>
+    <g class="deco" transform="translate(470,560)"><g class="d-bateau">${DECOS.bateau}</g></g>
+    <g class="deco" transform="translate(140,520)"><g class="d-bateau" style="animation-delay:-1.6s">${DECOS.bateau}</g></g>
+    <g class="deco" transform="translate(70,-20)"><g class="d-soleil" style="transform:scale(.8)">${DECOS.soleil}</g></g>
+    ${dolphin}
+    <text class="map-label" x="535" y="452">Funchal</text>
+    <text class="map-label sm" x="470" y="178">Pico do Arieiro</text>
+    <text class="map-label sm" x="40" y="138">Porto Moniz</text>
+    <text class="map-label sm" x="590" y="160">Santana</text>
+    <text class="map-label sm" x="372" y="452">Cabo Girão</text>
+    <text class="map-label sm" x="840" y="250">São Lourenço</text>
+    <text class="map-label sm" x="270" y="248" transform="rotate(-8 270 248)">levada</text>
+    <text class="nazare-title" x="660" y="96" transform="rotate(-6 660 96)">Madeira</text>`;
+}
+DESSINS.madere = (px, M) => dessinMadere(px, M);
+
+/* ---------- Carte dessinée de Lisbonne ---------- */
+function dessinLisbonne() {
+  const rng = (n) => { let x = Math.sin(n * 41.3) * 10000; return x - Math.floor(x); };
+  // terre au nord, le Tage et l'océan au sud, la rive sud (Almada) en bas à droite
+  const north = "M0,0 L720,0 L720,330 C680,336 640,330 600,340 C560,350 520,346 480,352 C440,358 400,352 360,360 C320,368 280,372 240,380 C200,388 160,392 120,400 C90,406 60,412 30,412 L0,410 Z";
+  const south = "M260,600 C300,520 360,480 430,470 C500,460 580,470 640,450 C680,440 700,430 720,428 L720,600 Z";
+  const house = (x, y, k) => {
+    const w = 13 + rng(k) * 6, h = 10 + rng(k + 3) * 8;
+    const wall = ["#FBFAF6", "#F3DB8E", "#F2C6B4", "#BFD8E6", "#FBFAF6"][k % 5], roof = ["#E0703B", "#C9553A", "#D9822B"][k % 3];
+    return `<g transform="translate(${f(x)},${f(y)})"><rect fill="${wall}" stroke="#B9A88A" stroke-width="1" x="${f(-w / 2)}" y="0" width="${f(w)}" height="${f(h)}"/><path fill="${roof}" d="M${f(-w / 2 - 2)},1 L0,-7 L${f(w / 2 + 2)},1Z"/></g>`;
+  };
+  let houses = "", k = 0;
+  for (let y = 140; y < 330; y += 22) for (let x = 0; x < 15; x++) {
+    const xx = 330 + x * 24 + (y / 22 % 2) * 12;
+    const shore = 330 + (720 - xx) * -0.02 + 20 - (xx < 480 ? (480 - xx) * 0.12 : 0);
+    if (y > shore || xx > 700) continue;
+    if (Math.hypot(xx - 470, y - 262) < 18 || Math.hypot(xx - 548, y - 300) < 18 || Math.hypot(xx - 404, y - 238) < 18) continue;
+    houses += house(xx, y, k++);
+  }
+  for (let x = 0; x < 4; x++) houses += house(60 + x * 22, 370 - x * 3, k++);   // Cascais
+  // azulejos en motif dans un coin
+  const azu = `<g class="azu" transform="translate(620,500)">${[0,1,2].map(i => [0,1,2].map(j => `<g transform="translate(${i * 30},${j * 30})"><rect width="28" height="28" rx="2"/><path d="M14,3 L25,14 L14,25 L3,14Z"/><circle cx="14" cy="14" r="3.5"/></g>`).join("")).join("")}</g>`;
+  // pont 25 de Abril
+  const bridge = `<g class="bridge25"><path class="deck" d="M300,372 L470,474"/><path class="tower" d="M340,330 v68 M430,384 v68"/><path class="cable" d="M300,372 Q320,340 340,330 Q385,390 430,384 Q450,410 470,474"/></g>`;
+  // Cristo Rei
+  const cristo = `<g transform="translate(500,452)"><rect class="ped" x="-6" y="-8" width="12" height="20"/><path class="cristo" d="M0,-30 v22 M-12,-24 h24"/><circle class="cristo-h" cx="0" cy="-33" r="3.5"/></g>`;
+  // tour de Belém
+  const belem = `<g transform="translate(230,388)"><rect class="belem" x="-9" y="-26" width="18" height="30"/><rect class="belem" x="-12" y="-6" width="24" height="12"/><path class="belem-t" d="M-9,-26 l4,-6 l5,4 l5,-4 l4,6Z"/></g>`;
+  // tram 28 qui monte et descend
+  const tram = `<path class="tram-line" d="M520,320 C540,280 580,250 640,236"/>
+    <g class="tram28"><rect x="-17" y="-10" width="34" height="18" rx="4"/><rect class="tw" x="-13" y="-6" width="8" height="7" rx="1"/><rect class="tw" x="-3" y="-6" width="8" height="7" rx="1"/><rect class="tw" x="7" y="-6" width="6" height="7" rx="1"/><circle cx="-9" cy="9" r="3"/><circle cx="9" cy="9" r="3"/><path class="pole" d="M0,-10 L6,-20"/>
+      <animateMotion dur="9s" repeatCount="indefinite" path="M520,320 C540,280 580,250 640,236 C580,250 540,280 520,320"/></g>`;
+  // castelo de São Jorge
+  const castelo = `<g transform="translate(566,196)"><path class="castle" d="M-24,16 V-8 h7 v5 h5 v-5 h6 v5 h6 v-5 h6 v5 h5 v-5 h7 V16Z"/></g>`;
+  const waves = [[40,470],[150,520],[60,560],[200,450],[340,420],[560,410],[650,390],[400,530]]
+    .map(([x, y], i) => `<path class="wave" style="animation-delay:-${i * .6}s" d="M${x},${y} q12,-12 24,0 t24,0 t24,0"/>`).join("");
+  const palms = [[40,360],[110,350],[150,372]].map(([x, y]) => `<g transform="translate(${x},${y})"><path class="palm-t" d="M0,0 C2,-14 -2,-26 1,-36"/><path class="palm" d="M1,-36 C-10,-40 -18,-34 -22,-28 M1,-36 C10,-42 20,-38 24,-30 M1,-36 C-4,-46 -12,-48 -16,-46 M1,-36 C6,-46 14,-48 18,-46"/></g>`).join("");
+  return `
+    <rect x="-50" y="-50" width="820" height="700" class="sea-bg"/>
+    ${waves}
+    <path class="land" d="${north}"/>
+    <path class="land" d="${south}"/>
+    ${azu}
+    <path class="road" d="M120,380 C200,360 280,340 340,320 C380,306 420,300 470,290"/>
+    ${palms}
+    ${houses}
+    ${castelo}
+    ${tram}
+    ${belem}
+    ${bridge}
+    ${cristo}
+    <g class="deco" transform="translate(300,520)"><g class="d-bateau">${DECOS.bateau}</g></g>
+    <g class="deco" transform="translate(130,480)"><g class="d-bateau" style="animation-delay:-1.2s">${DECOS.bateau}</g></g>
+    <g class="deco" transform="translate(40,440)"><g class="d-soleil" style="transform:scale(.7)">${DECOS.soleil}</g></g>
+        <text class="map-label sm" x="604" y="246">Alfama</text>
+    <text class="map-label sm" x="378" y="186">Bairro Alto</text>
+    <text class="map-label sm" x="210" y="424">Belém</text>
+    <text class="map-label sm" x="48" y="336">Cascais</text>
+    <text class="map-label sm" x="560" y="514">Almada</text>
+    <text class="map-label sm" x="644" y="296">tram 28</text>
+    <text class="sea-label" x="400" y="420">Tejo</text>
+    <text class="sea-label" x="20" y="590">Océan Atlantique</text>
+    <text class="nazare-title" x="20" y="150" transform="rotate(-6 20 150)">Lisboa</text>`;
+}
+DESSINS.lisbonne = () => dessinLisbonne();
+
+function decoSvg(M) {
+  return (M.deco || []).map(([t, x, y, txt], i) => t === "texte"
+    ? `<text class="deco-t" x="${x}" y="${y}">${txt}</text>`
+    : `<g class="deco" transform="translate(${x},${y})"><g style="animation-delay:-${i * .5}s" class="d-${t}">${DECOS[t] || ""}</g></g>`).join("");
+}
+const CAR_OLD = '<g class="car" transform="scale(1.5)"><path d="M22,2 L22,-6 L12,-8 L6,-16 L-10,-16 L-16,-8 L-22,-6 L-22,2 Z"/><circle cx="-12" cy="3" r="5"/><circle cx="12" cy="3" r="5"/></g>';
+
+function drawMap(v) {
+  const M = v.carte;
+  if (!M) { $("#map").innerHTML = ""; return; }
+  const px = (lng, lat) => [(lng - M.lon0) * M.k * M.cos + 20, (M.lat0 - lat) * M.k + 10];
+  const at = (c) => c.pos || px(c.lng, c.lat);
+  const land = M.terre ? M.terre.map(([a, b]) => px(a, b)) : [];
+  const pins = v.chapitres.map((c, i) => [c, i]).filter(([c]) => c.lat != null || c.pos);
+  const A = M.arrivee || {};
+  const start = A.aeroport ? px(...A.aeroport) : null;
+  const stops = [];
+  if (start) stops.push(start);
+  if (M.route) stops.push(...M.route); else pins.forEach(([c]) => stops.push(at(c)));
+  if (start && A.retour) stops.push(start);
+  const firstStop = stops[0] || [0, 0];
+  const motion = M.route ? `M${A.depuis[0]},${A.depuis[1]} ` + smooth(M.route.slice(0, -1), false).replace(/^M/, "L") : `M${A.depuis[0]},${A.depuis[1]} C${A.depuis[0] - 110},${A.depuis[1] + 80} ${firstStop[0] + 120},${firstStop[1] - 120} ${f(firstStop[0])},${f(firstStop[1])}`;
+
+  const waves = [[90,40],[700,30],[860,120],[120,300],[880,470],[300,560],[650,580],[80,470],[760,520],[60,150],[200,420]]
+    .map(([x, y], i) => `<path class="wave" style="animation-delay:-${i * .6}s" d="M${x},${y} q12,-12 24,0 t24,0 t24,0"/>`).join("");
+  const peaks = (M.pics || []).map(([x, y, h]) => `<path class="peak" d="M${x - h * .9},${y + 14} L${x},${y + 14 - h} L${x + h * .9},${y + 14}Z"/>`).join("");
+  const villes = (M.villes || []).map(([n, lng, lat]) => { const [x, y] = px(lng, lat); return `<circle cx="${f(x)}" cy="${f(y)}" r="5"/><text x="${f(x + 10)}" y="${f(y + 26)}">${n}</text>`; }).join("");
+
+  let bubbles = "";
+  pins.forEach(([c, i]) => {
+    const [x, y] = at(c), [dx, dy] = c.bulle || [0, -100], bx = x + dx, by = y + dy, R = 62;
+    bubbles += `<g class="bubble" data-ch="${i}" tabindex="0" role="button" aria-label="${i + 1}. ${c.lieu}" style="transition-delay:${0.1 + i * 0.08}s">
+      <line class="stem" x1="${f(x)}" y1="${f(y)}" x2="${f(bx)}" y2="${f(by)}"/>
+      <circle class="spot" cx="${f(x)}" cy="${f(y)}" r="8"/>
+      <g class="float" style="animation-delay:-${i * .7}s">
+        <clipPath id="cp${v.id}${i}"><circle cx="${f(bx)}" cy="${f(by)}" r="${R}"/></clipPath>
+        <image href="${poster(c.medias[0])}" x="${f(bx - R)}" y="${f(by - R)}" width="${R * 2}" height="${R * 2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp${v.id}${i})"/>
+        <circle class="ring" cx="${f(bx)}" cy="${f(by)}" r="${R}"/>
+        <circle class="badge" cx="${f(bx + R * .72)}" cy="${f(by - R * .72)}" r="20"/>
+        <text class="badge-t" x="${f(bx + R * .72)}" y="${f(by - R * .72)}">${i + 1}</text>
+      </g></g>`;
+  });
+
+  $("#map").innerHTML = `<svg viewBox="${M.vue}" role="img" aria-label="Carte de ${v.nom} avec les lieux du voyage">
+    ${M.ville ? DESSINS[M.ville](px, M) : `${waves}
+    <path class="land" d="${smooth(land, true)}"/>
+    ${peaks}
+    ${decoSvg(M)}
+    <g class="villes">${villes}</g>`}
+    <path class="route-line" d="${smooth(stops, false)}"/>
+    ${M.mer ? `<text class="sea-label" x="${M.mer[0]}" y="${M.mer[1]}">Océan Atlantique</text>` : ""}
+    ${v.groupe ? `<text class="group-label" x="${M.groupe[0]}" y="${M.groupe[1]}" text-anchor="end">Territoire du groupe de Madère</text>` : ""}
+    <g class="plane">${A.type === "bus" ? BUS : A.type === "tram" ? TRAMV : PLANE}
+      <animateMotion id="fly" dur="${M.route ? 4.5 : 2.4}s" begin="indefinite" fill="freeze" ${A.type === "bus" || A.type === "tram" ? "" : 'rotate="auto"'} path="${motion}" keySplines="0.4 0 0.2 1" keyTimes="0;1" calcMode="spline"/></g>
+    ${bubbles}
+  </svg>`;
+  $("#map").querySelectorAll(".bubble").forEach((b) => {
+    const go = () => Story.open(CUR, +b.dataset.ch);
+    b.addEventListener("click", go);
+    b.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
+}
+function animateMap() {
+  const fly = document.getElementById("fly");
+  try { $("#map .plane").classList.add("go"); fly.beginElement(); } catch (e) {}
+  setTimeout(() => $("#map").classList.add("live"), 1300);
+}
+
+/* ================= Mur de polaroids ================= */
+function buildWall(v) {
+  const wall = $("#wall"); wall.innerHTML = "";
+  v.chapitres.forEach((c, i) => {
+    const p = el("button", { className: "polaroid", "aria-label": c.titre });
+    p.dataset.ch = i;
+    p.innerHTML = `<div class="ph"><img alt="" loading="lazy" decoding="async"></div><div class="cap"><span></span><small></small></div><span class="stamp">${v.groupe ? "Groupe de<br>Madère" : v.nom + "<br>vu"}</span>`;
+    p.querySelector("img").src = poster(c.medias[0]);
+    p.querySelector(".cap span").textContent = c.titre;
+    p.querySelector(".cap small").textContent = c.medias.length > 1 ? c.medias.length + " souvenirs" : (isVideo(srcOf(c.medias[0])) ? "vidéo" : "");
+    p.onclick = () => Story.open(CUR, i);
+    wall.append(p);
+  });
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { const t = e.target; setTimeout(() => t.classList.add("dev"), 150); io.unobserve(t); } }), { threshold: 0.4 });
+  wall.querySelectorAll(".polaroid").forEach((p) => io.observe(p));
+}
+
+/* ================= Table de polaroids ================= */
+// Chaque photo est un polaroid posé sur une pile.
+// Glisser = lancer la photo, toucher = la retourner (le texte est au dos).
+const Story = {
+  items: [], idx: 0, curCh: -1, throws: 0, els: new Map(), voice: new Audio(),
+  V: null,
+  init() {
+    this.voice.addEventListener("ended", () => { $("#voiceChip").hidden = true; this.duckIfNeeded(); });
+    $("#stClose").onclick = () => this.close();
+    $("#stNext").onclick = () => this.throwTop(1, 0);
+    $("#stPrev").onclick = () => this.back();
+    $("#toGift").onclick = () => {
+      const v = this.V; this.close();
+      if (v.final && isDone(v)) setTimeout(() => $("#surpriseTitle").scrollIntoView({ behavior: "smooth" }), 100);
+      else if (isDone(v)) showHome();
+    };
+    document.addEventListener("keydown", (e) => {
+      if (!$("#story").classList.contains("on")) return;
+      if (e.key === "Escape") this.close();
+      if (e.key === "ArrowRight") this.throwTop(1, 0);
+      if (e.key === "ArrowLeft") this.back();
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); this.tapTop(); }
+    });
+  },
+  rot(i) { return ((i * 47) % 13) - 6; },               // inclinaison fixe propre à chaque photo
+  open(v, ch) {
+    this.V = v; this.items = [];
+    v.chapitres.forEach((c, ci) => c.medias.forEach((m, mi) => this.items.push({ ci, mi, src: srcOf(m), note: typeof m === "string" ? "" : (m.note || "") })));
+    this.idx = Math.max(0, this.items.findIndex((it) => it.ci === ch));
+    this.curCh = -1;
+    this.els.forEach((e) => e.remove()); this.els.clear();
+    $("#story").classList.add("on"); $("#stEnd").hidden = true;
+    document.body.style.overflow = "hidden";
+    this.render(); this.activate();
+  },
+  close() {
+    if (!$("#story").classList.contains("on")) return;
+    this.els.forEach((e) => { const v = e.querySelector("video"); if (v) v.pause(); });
+    this.voice.pause(); $("#voiceChip").hidden = true;
+    $("#story").classList.remove("on"); document.body.style.overflow = "";
+    Sound.duck(false);
+  },
+  makeCard(i) {
+    const it = this.items[i], c = this.V.chapitres[it.ci];
+    const card = el("div", { className: "pcard" });
+    card.innerHTML = `<div class="inner"><div class="front"><span class="tape"></span><div class="ph"></div><div class="cap"><span></span><small></small></div></div><div class="back"><p></p><small></small>${this.V.groupe ? '<em class="sign">' + this.V.groupe + "</em>" : ""}</div></div>`;
+    const ph = card.querySelector(".ph");
+    if (isVideo(it.src)) {
+      const v = el("video", { src: it.src, poster: poster(it.src), playsInline: true, loop: true, preload: "auto" });
+      v.setAttribute("playsinline", ""); ph.append(v);
+    } else {
+      const img = el("img", { src: it.src, alt: c.titre, draggable: false });
+      img.onload = () => { if (img.naturalWidth > img.naturalHeight * 1.1) card.classList.add("land"); };
+      ph.append(img);
+    }
+    card.querySelector(".cap span").textContent = c.titre;
+    card.querySelector(".cap small").textContent = (it.mi + 1) + " / " + c.medias.length;
+    card.querySelector(".back p").textContent = it.note || c.texte;
+    card.querySelector(".back small").textContent = c.lieu;
+    card._i = i; card._rot = this.rot(i);
+    this.bindDrag(card);
+    return card;
+  },
+  place(card, depth) {
+    const r = card._rot;
+    card.style.zIndex = 10 - depth;
+    card.classList.toggle("under", depth > 0);
+    card.style.transform = depth === 0 ? `rotate(${r}deg)` : `translate(${depth * 6}px, ${depth * 10}px) rotate(${r + depth * 2}deg) scale(${1 - depth * 0.04})`;
+  },
+  render(enterFrom) {
+    const want = [this.idx, this.idx + 1, this.idx + 2].filter((i) => i < this.items.length);
+    this.els.forEach((e, i) => { if (!want.includes(i)) { e.remove(); this.els.delete(i); } });
+    want.slice().reverse().forEach((i, k) => {
+      const depth = want.length - 1 - k;
+      let card = this.els.get(i);
+      if (!card) {
+        card = this.makeCard(i); this.els.set(i, card);
+        $("#stack").prepend(card);
+        if (depth === 0 && enterFrom) {
+          card.classList.add("drag");
+          card.style.transform = `translate(${enterFrom * 110}vw, -10vh) rotate(${enterFrom * 30}deg)`;
+          card.getBoundingClientRect(); card.classList.remove("drag");
+        } else if (depth > 0) {
+          card.classList.add("drag"); this.place(card, depth + 1); card.style.opacity = 0;
+          card.getBoundingClientRect(); card.classList.remove("drag"); card.style.opacity = "";
+        }
+      }
+      this.place(card, depth);
+    });
+    $("#stPrev").disabled = this.idx === 0;
+  },
+  top() { return this.els.get(this.idx); },
+  activate() {
+    const it = this.items[this.idx], c = this.V.chapitres[it.ci];
+    this.els.forEach((e, i) => { const v = e.querySelector("video"); if (v && i !== this.idx) v.pause(); });
+    if (it.ci !== this.curCh) {
+      this.curCh = it.ci;
+      const st = $("#stT"); st.textContent = c.titre; st.classList.remove("slap"); void st.offsetWidth; st.classList.add("slap");
+      $("#stL").textContent = c.lieu + ", souvenir " + (it.ci + 1) + " sur " + this.V.chapitres.length;
+      this.voice.pause();
+      if (c.vocal) { this.voice.src = c.vocal; this.voice.muted = Sound.muted; this.voice.play().then(() => { $("#voiceChip").hidden = false; Sound.duck(true); }).catch(() => {}); }
+      else { this.voice.removeAttribute("src"); $("#voiceChip").hidden = true; }
+      markSeen(this.V, it.ci);
+    }
+    const v = this.top()?.querySelector("video");
+    if (v) {
+      v.muted = Sound.muted; v.currentTime = 0;
+      v.play().catch(() => { v.muted = true; v.play().catch(() => {}); this.top().querySelector(".ph").append(el("span", { className: "snd", textContent: "Touche pour le son" })); });
+    }
+    this.duckIfNeeded();
+    const nx = this.items[this.idx + 3]; if (nx) new Image().src = poster(nx.src);
+  },
+  duckIfNeeded() {
+    const v = this.top()?.querySelector("video");
+    Sound.duck(!!(v && !v.muted) || !!(this.voice.src && !this.voice.paused));
+  },
+  syncMute() {
+    this.voice.muted = Sound.muted;
+    this.els.forEach((e) => { const v = e.querySelector("video"); if (v) v.muted = Sound.muted; });
+  },
+  tapTop() {
+    const card = this.top(); if (!card) return;
+    const v = card.querySelector("video"), snd = card.querySelector(".snd");
+    if (v && snd) { snd.remove(); v.muted = Sound.muted; v.currentTime = 0; v.play().catch(() => {}); this.duckIfNeeded(); return; }
+    card.classList.toggle("flipped");
+    if (card.classList.contains("flipped")) {
+      const back = card.querySelector(".back"), p = back.querySelector("p"); let fs = 34; p.style.fontSize = "";
+      while (back.scrollHeight > back.clientHeight + 1 && fs > 18) { fs -= 2; p.style.fontSize = fs + "px"; }
+    }
+    if (v) card.classList.contains("flipped") ? v.pause() : v.play().catch(() => {});
+    Sound.fx("flip");
+  },
+  throwTop(dx, dy) {
+    const card = this.top(); if (!card) return;
+    const dir = dx >= 0 ? 1 : -1, v = card.querySelector("video");
+    if (v) v.pause();
+    this.els.delete(this.idx);
+    card.classList.remove("drag");
+    card.style.transition = "transform .55s cubic-bezier(.2,.6,.3,1), opacity .55s";
+    card.style.transform = `translate(${dir * 120 + dx * 0.05}vw, ${dy * 1.5 - 60}px) rotate(${card._rot + dir * 40}deg)`;
+    card.style.opacity = 0;
+    setTimeout(() => card.remove(), 600);
+    Sound.fx("whoosh"); if (navigator.vibrate) navigator.vibrate(8);
+    if ((this.V.groupe || this.V.refPartout) && ++this.throws % 4 === 0 && this.idx < this.items.length - 1) { const sh = el("div", { className: "shout", textContent: this.V.groupe ? this.V.groupe + " !" : this.V.ref }); $("#story").append(sh); setTimeout(() => sh.remove(), 1500); }
+    $("#stHint").style.opacity = 0;
+    if (this.idx < this.items.length - 1) { this.idx++; this.render(); this.activate(); }
+    else { this.idx++; this.showEnd(); }
+  },
+  showEnd() {
+    const v = this.V, nx = nextOf(v), left = v.chapitres.length - seenCount(v);
+    let h, p, b;
+    if (left > 0) { h = "Fin de la pile."; p = "Il te reste " + left + " souvenir" + (left > 1 ? "s" : "") + " à voir dans " + v.nom + "."; b = "Retour"; }
+    else if (v.final) { h = "Fin du voyage du groupe de Madère."; p = "Il reste une dernière chose à ouvrir."; b = "Voir la surprise"; }
+    else { h = v.nom + ", terminé !"; p = (v.refPartout ? v.ref + "\n" : "") + (nx ? "Niveau suivant débloqué : " + nx.nom + "." : "La suite arrive bientôt."); b = "Retour au passeport"; }
+    $("#stEnd h3").textContent = h; $("#stEnd p").textContent = p; $("#toGift").textContent = b;
+    $("#stEnd").hidden = false; Sound.duck(false);
+    if (left === 0) { confetti(); if (navigator.vibrate) navigator.vibrate([20, 30, 20]); }
+  },
+  back() {
+    if (this.idx === 0) return;
+    if (this.idx >= this.items.length) $("#stEnd").hidden = true;
+    const v = this.top()?.querySelector("video"); if (v) v.pause();
+    this.idx--; this.render(-1); this.activate(); Sound.fx("whoosh");
+  },
+  bindDrag(card) {
+    let sx = 0, sy = 0, t0 = 0, dx = 0, dy = 0, down = false;
+    card.addEventListener("pointerdown", (e) => {
+      if (card._i !== this.idx) return;
+      down = true; sx = e.clientX; sy = e.clientY; t0 = performance.now(); dx = dy = 0;
+      card.setPointerCapture(e.pointerId); card.classList.add("drag");
+    });
+    card.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      dx = e.clientX - sx; dy = e.clientY - sy;
+      card.style.transform = `translate(${dx}px, ${dy}px) rotate(${card._rot + dx * 0.06}deg)`;
+    });
+    const end = () => {
+      if (!down) return; down = false;
+      const dt = performance.now() - t0, dist = Math.hypot(dx, dy), speed = dist / Math.max(dt, 1);
+      if (dist < 10 && dt < 400) { card.classList.remove("drag"); this.place(card, 0); return this.tapTop(); }
+      if (Math.abs(dx) > innerWidth * 0.25 || speed > 0.7 || dy < -160) return this.throwTop(dx || 1, dy);
+      card.classList.remove("drag"); this.place(card, 0);       // pas assez fort : elle revient sur la pile
+    };
+    card.addEventListener("pointerup", end);
+    card.addEventListener("pointercancel", end);
+  }
+};
+/* ================= Carte à gratter + confettis ================= */
+function setupScratch() {
+  const rev = $("#reveal");
+  rev.innerHTML = "";
+  const img = el("img", { src: C.surprise.photo, alt: "Surprise" });
+  rev.append(img, el("p", { textContent: (C.prenom ? C.prenom + ". " : "") + C.surprise.texte }));
+  const go = () => requestAnimationFrame(drawScratch);
+  img.complete ? go() : (img.onload = img.onerror = go);
+}
+function drawScratch() {
+  const cv = $("#scratch"), wrap = cv.parentElement;
+  const dpr = window.devicePixelRatio || 1, r = wrap.getBoundingClientRect();
+  if (!r.height) return setTimeout(drawScratch, 200);
+  cv.width = r.width * dpr; cv.height = r.height * dpr;
+  const ctx = cv.getContext("2d"); ctx.scale(dpr, dpr);
+  const grad = ctx.createLinearGradient(0, 0, r.width, r.height);
+  grad.addColorStop(0, "#C9A24A"); grad.addColorStop(.5, "#F3DB8E"); grad.addColorStop(1, "#B98E36");
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, r.width, r.height);
+  ctx.fillStyle = "rgba(255,255,255,.18)";
+  for (let y = 20; y < r.height; y += 40) for (let x = (y / 40 % 2) * 20; x < r.width; x += 40) { ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill(); }
+  ctx.fillStyle = "#5A4313"; ctx.textAlign = "center";
+  ctx.font = "800 42px 'Bricolage Grotesque', sans-serif"; ctx.fillText("Gratte ici", r.width / 2, r.height / 2);
+  ctx.globalCompositeOperation = "destination-out";
+  let down = false, moves = 0, last = null;
+  const pos = (e) => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  const scratch = (e) => {
+    const p = pos(e); ctx.lineWidth = 58; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(...(last || p)); ctx.lineTo(...p); ctx.stroke(); last = p;
+    if (++moves % 10 === 0) check();
+  };
+  const check = () => {
+    if (cv.classList.contains("done")) return;
+    const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let c = 0, t = 0;
+    for (let i = 3; i < d.length; i += 4 * 50) { t++; if (d[i] === 0) c++; }
+    if (c / t > 0.5) { cv.classList.add("done"); confetti(); Sound.birthday(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); }
+  };
+  cv.addEventListener("pointerdown", (e) => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(e); });
+  cv.addEventListener("pointermove", (e) => { if (down) scratch(e); });
+  cv.addEventListener("pointerup", () => { down = false; check(); });
+  cv.addEventListener("pointercancel", () => { down = false; });
+}
+function confetti() {
+  const cv = $("#confetti"), ctx = cv.getContext("2d");
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ["#C0266D", "#F2A93B", "#2F5D3A", "#0E4D64", "#F3DB8E", "#8CC79A"];
+  const ps = Array.from({ length: 160 }, () => ({ x: cv.width / 2, y: cv.height * .55, vx: (Math.random() - .5) * 16, vy: -Math.random() * 18 - 6, r: Math.random() * 7 + 4, c: cols[Math.random() * cols.length | 0], a: Math.random() * 6, va: (Math.random() - .5) * .3 }));
+  let frames = 0;
+  (function loop() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ps.forEach((p) => { p.vy += .45; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore(); });
+    if (++frames < 220) requestAnimationFrame(loop); else ctx.clearRect(0, 0, cv.width, cv.height);
+  })();
+}
+
+/* ================= Embarquement ================= */
+$("#pName").textContent = C.prenom || "Toi";
+$("#hint").textContent = C.indice; $("#hint").hidden = !C.indice;
+$("#lockForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const norm = (x) => x.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (norm($("#code").value) !== norm(C.code)) {
+    $("#err").textContent = "Ce n'est pas le bon code.";
+    const l = $("#lock"); l.classList.remove("shake"); void l.offsetWidth; l.classList.add("shake");
+    return;
+  }
+  $("#code").blur();
+  Sound.unlock(); Sound.apply();
+  $("#app").hidden = false;
+  Story.init(); buildHome();
+  $("#lock").classList.add("gone");
+  setTimeout(() => $("#lock").remove(), 900);
+});
+</script>
+</body>
+</html>
