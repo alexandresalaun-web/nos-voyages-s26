@@ -26,7 +26,7 @@ const CONFIG = {
   code: "lnam2026",            // le code pour ouvrir l'appli (majuscules et accents ignorés)
   indice: "",                 // texte au-dessus du code (laisse vide pour ne rien afficher)
   // Musique jouée dans les niveaux (chaque voyage peut avoir la sienne avec musique: "...")
-  musique: "musique/kids-doux.mp3",
+  musique: "musique/kids-doux2.mp3",
 
   voyages: [
   /* ------------------------- NIVEAU 1 ------------------------- */
@@ -113,7 +113,7 @@ const CONFIG = {
   },
 
   /* ------------------------- NIVEAU 4 ------------------------- */
-  { id: "madere", nom: "Madère", dates: "Été 2026", teinte: "#C0266D", final: true, musique: "musique/kids-doux.mp3", ref: "Où est Camilo ?", groupe: "Le groupe de Madère",
+  { id: "madere", nom: "Madère", dates: "Été 2026", teinte: "#C0266D", final: true, musique: "musique/kids-doux2.mp3", ref: "Où est Camilo ?", groupe: "Le groupe de Madère",
     carte: {
       lon0: -17.30, lat0: 32.905, k: 1650, cos: 0.841, vue: "20 -70 950 700",
       terre: [[-17.265,32.805],[-17.24,32.835],[-17.20,32.858],[-17.165,32.870],[-17.135,32.848],[-17.10,32.830],[-17.06,32.812],[-17.02,32.817],[-16.98,32.831],[-16.94,32.835],[-16.90,32.822],[-16.865,32.805],[-16.835,32.785],[-16.80,32.762],[-16.765,32.747],[-16.72,32.752],[-16.68,32.754],[-16.652,32.745],[-16.69,32.737],[-16.735,32.727],[-16.77,32.705],[-16.79,32.685],[-16.82,32.660],[-16.86,32.645],[-16.90,32.641],[-16.94,32.634],[-16.98,32.638],[-17.02,32.650],[-17.06,32.665],[-17.10,32.676],[-17.14,32.696],[-17.18,32.720],[-17.22,32.748],[-17.255,32.775]],
@@ -495,50 +495,6 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
 .car rect, .car path { fill: var(--atlantic); }
 .car circle { fill: var(--ink); }
 
-
-/* ================= Le gâteau ================= */
-.cake-cta { background: #1E2B28 !important; margin-top: 22px; }
-.cake-cta span { font-size: 22px; }
-#cake { position: fixed; inset: 0; z-index: 75; display: none; flex-direction: column; color: #fff; text-align: center; overflow: hidden;
-  background: radial-gradient(90% 60% at 50% 62%, #3A2440 0%, #1A1024 60%, #0C0812 100%); transition: background 1.6s; }
-#cake.on { display: flex; animation: fullIn .5s ease-out; }
-#cake.lit { background: radial-gradient(90% 60% at 50% 62%, #FFE7C2 0%, #F6B9C9 55%, #C0266D 100%); color: #1E2B28; }
-.garland { position: absolute; top: max(0px, env(safe-area-inset-top)); left: -10px; right: -10px; height: 70px; pointer-events: none; }
-.garland svg { width: 100%; height: 100%; }
-.bulb { animation: twinkle 2.4s ease-in-out infinite; }
-@keyframes twinkle { 50% { opacity: .35; } }
-.cake-close { position: absolute; z-index: 3; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(255,255,255,.16); color: inherit; display: grid; place-items: center; }
-.cake-close svg { width: 22px; height: 22px; }
-.cake-top { padding: calc(env(safe-area-inset-top) + 74px) 24px 0; transition: opacity .6s; }
-.cake-kicker { font-family: "Caveat", cursive; font-size: 34px; color: #F3DB8E; }
-#cake.lit .cake-kicker { color: #C0266D; }
-.cake-top h2 { font-size: clamp(24px, 7vw, 32px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-top: 2px; }
-.cake-stage { flex: 1 1 0; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 22px 18px 8px; }
-#cakeSvg { height: 100%; width: auto; max-width: min(88vw, 420px); overflow: visible; }
-#cake.lit .cake-top { max-height: 0; padding-top: calc(env(safe-area-inset-top) + 60px); overflow: hidden; }
-.cake-top { max-height: 240px; transition: max-height .8s, opacity .6s; }
-.cake-name { font: 600 40px "Caveat", cursive; fill: #C0266D; }
-.candle { cursor: pointer; }
-.candle .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker .18s ease-in-out infinite alternate; transition: transform .25s, opacity .25s; }
-.candle .halo { animation: halo 1.6s ease-in-out infinite alternate; transition: opacity .3s; }
-@keyframes flicker { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(.92, 1.08) rotate(3deg); } }
-@keyframes halo { from { opacity: .75; } to { opacity: 1; } }
-.candle.out .flame { transform: scale(0); opacity: 0; animation: none; }
-.candle.out .halo { opacity: 0; animation: none; }
-.candle .smoke { opacity: 0; fill: none; stroke: #cfc6d8; stroke-width: 3; stroke-linecap: round; }
-.candle.out .smoke { animation: smoke 1.8s ease-out forwards; }
-@keyframes smoke { 0% { opacity: .8; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
-.cake-bottom { flex: none; padding: 10px 24px calc(env(safe-area-inset-bottom) + 26px); min-height: 120px; }
-.cake-hint { font-size: 15px; opacity: .7; }
-.cake-hint b { color: #F3DB8E; }
-.cake-wish { animation: wishIn 1s cubic-bezier(.3,1.4,.5,1) both; }
-@keyframes wishIn { from { opacity: 0; transform: translateY(20px) scale(.9); } }
-.cake-big { font-size: clamp(32px, 9.5vw, 46px); font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
-.cake-big span { font-family: "Caveat", cursive; font-weight: 600; font-size: 1.25em; color: #C0266D; letter-spacing: 0; }
-.cake-from { margin-top: 12px; font-size: 16px; line-height: 1.4; opacity: .8; }
-.mic-meter { display: inline-block; width: 120px; height: 6px; border-radius: 6px; background: rgba(255,255,255,.15); margin-top: 10px; overflow: hidden; }
-.mic-meter i { display: block; height: 100%; width: 0; background: #F3DB8E; border-radius: 6px; transition: width .08s; }
-
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .bubble { opacity: 1; transform: none; } .polaroid img { filter: none; } }
 </style>
 </head>
@@ -609,7 +565,6 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
       <div id="scratchBox" hidden>
         <p class="sec-sub">Gratte avec ton doigt.</p>
         <div class="scratch-wrap"><div class="reveal" id="reveal"></div><canvas id="scratch"></canvas></div>
-        <button class="cta cake-cta" id="cakeBtn" hidden><span aria-hidden="true">🎂</span>Une toute dernière chose</button>
       </div>
     </div>
   </section>
@@ -637,41 +592,6 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
   <div class="tb-end" id="stEnd" hidden><div><h3>Fin du voyage du groupe de Madère.</h3><p>Il reste une dernière chose à ouvrir.</p><button id="toGift">Voir la surprise</button></div></div>
 </div>
 
-
-<!-- ============ Le gâteau ============ -->
-<div id="cake" role="dialog" aria-modal="true" aria-label="Le gâteau d'anniversaire">
-  <div class="garland" id="garland"></div>
-  <button class="cake-close" id="cakeClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <div class="cake-top">
-    <p class="cake-kicker" id="cakeKicker">Fais un vœu…</p>
-    <h2 id="cakeTitle">puis souffle sur ton téléphone</h2>
-  </div>
-  <div class="cake-stage">
-    <svg id="cakeSvg" viewBox="0 0 300 330" aria-hidden="true">
-      <defs>
-        <radialGradient id="glow"><stop offset="0" stop-color="#FFD98A" stop-opacity=".9"/><stop offset="1" stop-color="#FFB347" stop-opacity="0"/></radialGradient>
-        <linearGradient id="flameG" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8A1F"/><stop offset=".6" stop-color="#FFD54A"/><stop offset="1" stop-color="#FFF6C8"/></linearGradient>
-      </defs>
-      <ellipse cx="150" cy="306" rx="140" ry="18" fill="#E8E2D6"/>
-      <ellipse cx="150" cy="302" rx="128" ry="13" fill="#F7F3EA"/>
-      <rect x="40" y="200" width="220" height="100" rx="12" fill="#F4B6C8"/>
-      <path d="M40,214 q0,-14 14,-14 h192 q14,0 14,14 v8 q-10,14 -20,0 q-10,16 -22,0 q-10,14 -22,0 q-10,16 -22,0 q-10,14 -22,0 q-10,16 -22,0 q-10,14 -22,0 q-10,16 -22,0 q-10,14 -22,0 q-10,14 -16,6 Z" fill="#FBF6EA"/>
-      <g fill="#C0266D"><circle cx="70" cy="262" r="4"/><circle cx="110" cy="276" r="4"/><circle cx="190" cy="270" r="4"/><circle cx="232" cy="258" r="4"/><circle cx="150" cy="284" r="4"/></g>
-      <text x="150" y="268" text-anchor="middle" class="cake-name" id="cakeName">Sarah</text>
-      <rect x="70" y="128" width="160" height="78" rx="10" fill="#8B5A3C"/>
-      <path d="M70,140 q0,-12 12,-12 h136 q12,0 12,12 v6 q-9,12 -18,0 q-9,14 -20,0 q-9,12 -20,0 q-9,14 -20,0 q-9,12 -20,0 q-9,14 -20,0 q-9,12 -20,0 q-6,10 -12,4 Z" fill="#FBF6EA"/>
-      <g fill="#F2A93B"><rect x="92" y="170" width="10" height="4" rx="2" transform="rotate(30 97 172)"/><rect x="130" y="182" width="10" height="4" rx="2" transform="rotate(-20 135 184)"/><rect x="170" y="168" width="10" height="4" rx="2" transform="rotate(60 175 170)"/><rect x="200" y="186" width="10" height="4" rx="2" transform="rotate(-40 205 188)"/></g>
-      <g id="candles"></g>
-    </svg>
-  </div>
-  <div class="cake-bottom">
-    <p class="cake-hint" id="cakeHint">Tu peux aussi toucher les bougies.</p>
-    <div class="cake-wish" id="cakeWish" hidden>
-      <p class="cake-big">Joyeux anniversaire<br><span id="cakeWho">Sarah</span> !</p>
-      <p class="cake-from">De la part de tout le monde.<br>Lisbonne, Nazaré, Algarve, Madère… et la suite.</p>
-    </div>
-  </div>
-</div>
 <div id="full" role="dialog" aria-modal="true" aria-label="Photo en plein écran"><img alt=""><button aria-label="Fermer">×</button></div>
 <canvas id="confetti"></canvas>
 
@@ -1466,7 +1386,7 @@ function drawScratch() {
     if (cv.classList.contains("done")) return;
     const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let c = 0, t = 0;
     for (let i = 3; i < d.length; i += 4 * 50) { t++; if (d[i] === 0) c++; }
-    if (c / t > 0.5) { cv.classList.add("done"); confetti(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); setTimeout(() => { $("#cakeBtn").hidden = false; $("#cakeBtn").scrollIntoView({ behavior: "smooth", block: "center" }); }, 1400); }
+    if (c / t > 0.5) { cv.classList.add("done"); confetti(); Sound.birthday(); if (navigator.vibrate) navigator.vibrate([30, 40, 30]); }
   };
   cv.addEventListener("pointerdown", (e) => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(e); });
   cv.addEventListener("pointermove", (e) => { if (down) scratch(e); });
@@ -1485,93 +1405,6 @@ function confetti() {
     if (++frames < 220) requestAnimationFrame(loop); else ctx.clearRect(0, 0, cv.width, cv.height);
   })();
 }
-
-
-/* ================= Le gâteau : souffler les bougies ================= */
-const Cake = {
-  mic: null, raf: 0, left: 0, blowFrames: 0, lastOut: 0,
-  open() {
-    const colors = C.voyages.map((v) => v.teinte);
-    const n = colors.length, g = $("#candles"); g.innerHTML = "";
-    colors.forEach((col, i) => {
-      const x = 150 + (i - (n - 1) / 2) * 34, y = 128;
-      g.insertAdjacentHTML("beforeend", `<g class="candle" data-i="${i}">
-        <circle class="halo" cx="${x}" cy="${y - 62}" r="26" fill="url(#glow)"/>
-        <rect x="${x - 6}" y="${y - 50}" width="12" height="50" rx="3" fill="${col}"/>
-        <path d="M${x - 6},${y - 40} l12,-6 M${x - 6},${y - 26} l12,-6 M${x - 6},${y - 12} l12,-6" stroke="rgba(255,255,255,.7)" stroke-width="3"/>
-        <path d="M${x},${y - 50} v-6" stroke="#3A2A1E" stroke-width="2"/>
-        <path class="flame" d="M${x},${y - 82} C${x + 9},${y - 70} ${x + 8},${y - 58} ${x},${y - 56} C${x - 8},${y - 58} ${x - 9},${y - 70} ${x},${y - 82}Z" fill="url(#flameG)"/>
-        <path class="smoke" d="M${x},${y - 58} c-6,-8 6,-14 0,-22 c-6,-8 6,-12 0,-18"/>
-        <rect x="${x - 16}" y="${y - 90}" width="32" height="92" fill="transparent"/>
-      </g>`);
-    });
-    g.querySelectorAll(".candle").forEach((c) => c.addEventListener("click", () => this.out(c)));
-    this.left = n;
-    // guirlande lumineuse
-    const cols = ["#F3DB8E", "#F06AA6", "#8FD3F0", "#8CC79A"];
-    let bulbs = "";
-    for (let i = 0; i < 14; i++) { const x = 10 + i * 30, y = 18 + Math.sin(i * .9) * 6 + (i % 2) * 8; bulbs += `<circle class="bulb" style="animation-delay:-${i * .3}s" cx="${x}" cy="${y}" r="5.5" fill="${cols[i % 4]}"/>`; }
-    $("#garland").innerHTML = `<svg viewBox="0 0 420 50" preserveAspectRatio="none"><path d="M0,14 Q105,40 210,16 T420,16" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>${bulbs}</svg>`;
-    $("#cakeName").textContent = C.prenom || "Toi";
-    $("#cakeWho").textContent = C.prenom || "toi";
-    $("#cake").classList.remove("lit"); $("#cakeWish").hidden = true; $(".cake-top").style.opacity = "";
-    $("#cakeKicker").textContent = "Fais un vœu…"; $("#cakeTitle").textContent = "puis souffle sur ton téléphone";
-    $("#cakeHint").innerHTML = 'Tu peux aussi toucher les bougies.<br><span class="mic-meter"><i id="micLevel"></i></span>';
-    $("#cake").classList.add("on"); document.body.style.overflow = "hidden";
-    Sound.stop(); $("#soundBtn").hidden = true;
-    this.listen();
-  },
-  async listen() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
-      const ctx = Sound.ctx || (Sound.ctx = new (window.AudioContext || window.webkitAudioContext)());
-      if (ctx.state === "suspended") await ctx.resume();
-      const src = ctx.createMediaStreamSource(stream);
-      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 600;   // le souffle est un bruit grave
-      const an = ctx.createAnalyser(); an.fftSize = 1024;
-      src.connect(lp).connect(an);
-      this.mic = { stream, an, buf: new Float32Array(an.fftSize) };
-      const tick = () => {
-        an.getFloatTimeDomainData(this.mic.buf);
-        let sum = 0; for (const v of this.mic.buf) sum += v * v;
-        const rms = Math.sqrt(sum / this.mic.buf.length);
-        const lvl = $("#micLevel"); if (lvl) lvl.style.width = Math.min(100, rms * 900) + "%";
-        this.blowFrames = rms > 0.06 ? this.blowFrames + 1 : Math.max(0, this.blowFrames - 2);
-        // souffle tenu ~ 0,15 s : une bougie s'éteint, puis une autre toutes les 0,2 s tant qu'on souffle
-        if (this.blowFrames > 8 && performance.now() - this.lastOut > 200) {
-          const c = $("#candles .candle:not(.out)"); if (c) this.out(c);
-        }
-        if (this.left > 0) this.raf = requestAnimationFrame(tick);
-      };
-      tick();
-    } catch (e) {
-      $("#cakeHint").textContent = "Touche les bougies pour les souffler.";
-    }
-  },
-  out(c) {
-    if (c.classList.contains("out")) return;
-    c.classList.add("out"); this.lastOut = performance.now(); this.left--;
-    Sound.fx("whoosh"); if (navigator.vibrate) navigator.vibrate(15);
-    if (this.left === 0) setTimeout(() => this.done(), 700);
-  },
-  done() {
-    this.stopMic();
-    $("#cake").classList.add("lit");
-    $(".cake-top").style.opacity = "0";
-    $("#cakeHint").textContent = "";
-    $("#cakeWish").hidden = false;
-    confetti(); setTimeout(confetti, 900);
-    Sound.birthday();
-    if (navigator.vibrate) navigator.vibrate([40, 60, 40, 60, 80]);
-  },
-  stopMic() {
-    cancelAnimationFrame(this.raf);
-    if (this.mic) { this.mic.stream.getTracks().forEach((t) => t.stop()); this.mic = null; }
-  },
-  close() { this.stopMic(); $("#cake").classList.remove("on"); document.body.style.overflow = ""; }
-};
-$("#cakeBtn").onclick = () => Cake.open();
-$("#cakeClose").onclick = () => Cake.close();
 
 /* ================= Embarquement ================= */
 $("#pName").textContent = C.prenom || "Toi";
