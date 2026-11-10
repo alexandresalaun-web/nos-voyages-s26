@@ -607,7 +607,7 @@ const Sound = {
     this.song.play().catch(() => {}); this.song.pause();
     try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
   },
-  target() { return this.muted ? 0 : (this.ducked ? 0.2 : 1) * 0.2; },
+  target() { return this.muted ? 0 : (this.ducked ? 0.2 : 1) * 0.6; },
   fade(to, ms, done) {
     clearInterval(this._fade); const s = this.song, from = s.volume, t0 = performance.now();
     this._fade = setInterval(() => { const k = Math.min(1, (performance.now() - t0) / ms); s.volume = from + (to - from) * k; if (k === 1) { clearInterval(this._fade); done && done(); } }, 30);
