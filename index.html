@@ -495,6 +495,46 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
 .car rect, .car path { fill: var(--atlantic); }
 .car circle { fill: var(--ink); }
 
+
+/* ================= Mode plein écran (film) ================= */
+#story.film { background: #000; }
+#story.film::before { display: none; }
+#story.film .stack { inset: 0; display: block; }
+#story.film .pcard { inset: 0; width: 100%; height: 100%; max-height: none; cursor: default; transition: transform .45s cubic-bezier(.2,.7,.2,1), opacity .5s; }
+#story.film .pcard .inner, #story.film .pcard .front { height: 100%; }
+#story.film .pcard .front { padding: 0; background: #000; box-shadow: none; }
+#story.film .pcard .back, #story.film .pcard .tape, #story.film .pcard .cap, #story.film .pcard .zoom { display: none; }
+#story.film .pcard .ph { position: absolute; inset: 0; aspect-ratio: auto; background: #000; }
+#story.film .pcard .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+#story.film .pcard .ph img.blur { object-fit: cover; filter: blur(28px) brightness(.45) saturate(1.2); transform: scale(1.2); }
+#story.film .pcard .ph video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+#story.film .pcard:not(.under) .ph img:not(.blur) { animation: kenburns 9s ease-out forwards; }
+#story.film .pcard .ph img.pan { width: auto; height: 70%; max-width: none; top: 14%; left: 0; right: auto; bottom: auto; object-fit: cover; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+#story.film .pcard:not(.under) .ph img.pan { animation: pan 11s ease-in-out .6s infinite alternate; }
+@keyframes pan { from { transform: translateX(0); } to { transform: translateX(var(--pan)); } }
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.07); } }
+.shade-top, .shade-bot { position: absolute; left: 0; right: 0; z-index: 20; pointer-events: none; transition: opacity .4s; }
+.shade-top { top: 0; height: 22%; background: linear-gradient(rgba(0,0,0,.7), transparent); }
+.shade-bot { bottom: 0; height: 38%; background: linear-gradient(transparent, rgba(0,0,0,.82)); }
+#story:not(.film) .shade-top, #story:not(.film) .shade-bot, #story:not(.film) .credits { display: none; }
+#story.film .sub { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 92px); z-index: 25; padding: 0 22px; text-align: center; pointer-events: none; transition: opacity .4s; }
+#story.film .sub p { font-size: clamp(19px, 5.4vw, 24px); font-weight: 600; line-height: 1.3; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.7); max-width: 30ch; margin: 0 auto; }
+#story.film .sub p:empty { display: none; }
+#story.film .sub small { display: block; margin-top: 8px; font-size: 13px; letter-spacing: .08em; color: rgba(255,255,255,.7); }
+.pcard .sub { display: none; }
+#story.film .pcard .sub { display: block; }
+#story.film .pcard.under .sub { opacity: 0; }
+.credits { position: absolute; inset: 0; z-index: 26; display: grid; place-content: center; text-align: center; pointer-events: none; padding: 24px; color: #fff; opacity: 0; }
+.credits b { font-size: clamp(42px, 13vw, 76px); font-weight: 800; letter-spacing: -0.04em; line-height: .92; text-shadow: 0 4px 30px rgba(0,0,0,.6); }
+.credits span { display: block; margin-top: 12px; font-family: "Caveat", cursive; font-size: 30px; color: #F3DB8E; text-shadow: 0 2px 12px rgba(0,0,0,.6); }
+.credits.show { animation: credits 2.2s ease forwards; }
+@keyframes credits { 0% { opacity: 0; transform: scale(.94); } 18%, 68% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.03); } }
+#story.film.clean .tb-top, #story.film.clean .tb-bottom, #story.film.clean .sub, #story.film.clean .shade-top, #story.film.clean .shade-bot { opacity: 0; }
+#story.film.clean .tb-top, #story.film.clean .tb-bottom { pointer-events: none; }
+#story.film .tb-top, #story.film .tb-bottom { transition: opacity .4s; }
+#story.film .shout { top: 30%; }
+#story.film .sticker { font-size: 25px; padding: 3px 12px 5px; }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .bubble { opacity: 1; transform: none; } .polaroid img { filter: none; } }
 </style>
 </head>
@@ -573,7 +613,7 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
 <button class="sound-btn" id="soundBtn" aria-label="Couper le son" hidden><span class="eq"><i></i><i></i><i></i></span></button>
 
 <!-- ============ Table de polaroids ============ -->
-<div id="story" role="dialog" aria-modal="true" aria-label="Souvenirs">
+<div id="story" class="film" role="dialog" aria-modal="true" aria-label="Souvenirs">
   <div class="tb-top">
     <div class="tb-title">
       <span class="sticker" id="stT"></span>
@@ -584,9 +624,11 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
     <button id="stClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
   <div class="stack" id="stack"></div>
+  <div class="shade-top"></div><div class="shade-bot"></div>
+  <div class="credits" id="credits"><b></b><span></span></div>
   <div class="tb-bottom">
     <button id="stPrev" aria-label="Reprendre la photo d'avant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
-    <p class="tb-hint" id="stHint">Glisse pour lancer la photo,<br>touche pour la retourner.</p>
+    <p class="tb-hint" id="stHint">Glisse pour changer,<br>touche pour masquer le texte.</p>
     <button id="stNext" aria-label="Photo suivante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </div>
   <div class="tb-end" id="stEnd" hidden><div><h3>Fin du voyage du groupe de Madère.</h3><p>Il reste une dernière chose à ouvrir.</p><button id="toGift">Voir la surprise</button></div></div>
@@ -1203,7 +1245,7 @@ const Story = {
   makeCard(i) {
     const it = this.items[i], c = this.V.chapitres[it.ci];
     const card = el("div", { className: "pcard" });
-    card.innerHTML = `<div class="inner"><div class="front"><span class="tape"></span><div class="ph"></div><div class="cap"><span></span><small></small></div></div><div class="back"><p></p><small></small>${this.V.groupe ? '<em class="sign">' + this.V.groupe + "</em>" : ""}</div></div>`;
+    card.innerHTML = `<div class="inner"><div class="front"><span class="tape"></span><div class="ph"></div><div class="cap"><span></span><small></small></div><div class="sub"><p></p><small></small></div></div><div class="back"><p></p><small></small>${this.V.groupe ? '<em class="sign">' + this.V.groupe + "</em>" : ""}</div></div>`;
     const ph = card.querySelector(".ph");
     if (isVideo(it.src)) {
       const v = el("video", { src: it.src, poster: poster(it.src), playsInline: true, loop: true, preload: "auto" });
@@ -1211,17 +1253,27 @@ const Story = {
       v.addEventListener("play", () => this.duckIfNeeded());
       v.addEventListener("pause", () => setTimeout(() => this.duckIfNeeded(), 150));
     } else {
+      ph.append(el("img", { className: "blur", src: it.src, alt: "", draggable: false }));
       const img = el("img", { src: it.src, alt: c.titre, draggable: false });
       const zb = el("button", { className: "zoom", "aria-label": "Voir en plein écran", innerHTML: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' });
       zb.addEventListener("pointerdown", (e) => e.stopPropagation());
       zb.addEventListener("click", (e) => { e.stopPropagation(); openFull(it.src); });
       ph.append(zb);
-      img.onload = () => { if (img.naturalWidth > img.naturalHeight * 1.1) card.classList.add("land"); };
+      img.onload = () => {
+        if (img.naturalWidth > img.naturalHeight * 1.1) {
+          card.classList.add("land");
+          // plein écran : la photo paysage prend 70 % de la hauteur et défile doucement pour tout montrer
+          const w = innerHeight * 0.7 * img.naturalWidth / img.naturalHeight;
+          if (w > innerWidth) { img.classList.add("pan"); img.style.setProperty("--pan", (innerWidth - w) + "px"); }
+        }
+      };
       ph.append(img);
     }
     card.querySelector(".cap span").textContent = c.titre;
     card.querySelector(".cap small").textContent = (it.mi + 1) + " / " + c.medias.length;
     card.querySelector(".back p").textContent = it.note || c.texte;
+    card.querySelector(".sub p").textContent = it.note || (it.mi === 0 ? c.texte : "");
+    card.querySelector(".sub small").textContent = (it.mi + 1) + " / " + c.medias.length;
     card.querySelector(".back small").textContent = c.lieu;
     card._i = i; card._rot = this.rot(i);
     this.bindDrag(card);
@@ -1231,7 +1283,8 @@ const Story = {
     const r = card._rot;
     card.style.zIndex = 10 - depth;
     card.classList.toggle("under", depth > 0);
-    card.style.transform = depth === 0 ? `rotate(${r}deg)` : `translate(${depth * 6}px, ${depth * 10}px) rotate(${r + depth * 2}deg) scale(${1 - depth * 0.04})`;
+    card.style.transform = depth === 0 ? "none" : "scale(1.05)";
+    card.style.opacity = depth <= 1 ? "" : "0";
   },
   render(enterFrom) {
     const want = [this.idx, this.idx + 1, this.idx + 2].filter((i) => i < this.items.length);
@@ -1244,7 +1297,7 @@ const Story = {
         $("#stack").prepend(card);
         if (depth === 0 && enterFrom) {
           card.classList.add("drag");
-          card.style.transform = `translate(${enterFrom * 110}vw, -10vh) rotate(${enterFrom * 30}deg)`;
+          card.style.transform = `translateX(${enterFrom * 100}vw)`;
           card.getBoundingClientRect(); card.classList.remove("drag");
         } else if (depth > 0) {
           card.classList.add("drag"); this.place(card, depth + 1); card.style.opacity = 0;
@@ -1262,6 +1315,7 @@ const Story = {
     if (it.ci !== this.curCh) {
       this.curCh = it.ci;
       const st = $("#stT"); st.textContent = c.titre; st.classList.remove("slap"); void st.offsetWidth; st.classList.add("slap");
+      const cr = $("#credits"); cr.querySelector("b").textContent = c.titre; cr.querySelector("span").textContent = c.lieu; cr.classList.remove("show"); void cr.offsetWidth; cr.classList.add("show");
       $("#stL").textContent = c.lieu + ", souvenir " + (it.ci + 1) + " sur " + this.V.chapitres.length;
       this.voice.pause();
       if (c.vocal) { this.voice.src = c.vocal; this.voice.muted = Sound.muted; this.voice.play().then(() => { $("#voiceChip").hidden = false; Sound.duck(true); }).catch(() => {}); }
@@ -1289,6 +1343,7 @@ const Story = {
     const card = this.top(); if (!card) return;
     const v = card.querySelector("video"), snd = card.querySelector(".snd");
     if (v && snd) { snd.remove(); v.muted = Sound.muted; v.currentTime = 0; v.play().catch(() => {}); this.duckIfNeeded(); return; }
+    if ($("#story").classList.contains("film")) { $("#story").classList.toggle("clean"); return; }
     card.classList.toggle("flipped");
     if (card.classList.contains("flipped")) {
       const back = card.querySelector(".back"), p = back.querySelector("p"); let fs = 34; p.style.fontSize = "";
@@ -1304,7 +1359,7 @@ const Story = {
     this.els.delete(this.idx);
     card.classList.remove("drag");
     card.style.transition = "transform .55s cubic-bezier(.2,.6,.3,1), opacity .55s";
-    card.style.transform = `translate(${dir * 120 + dx * 0.05}vw, ${dy * 1.5 - 60}px) rotate(${card._rot + dir * 40}deg)`;
+    card.style.transform = `translateX(${dir * 105}vw)`;
     card.style.opacity = 0;
     setTimeout(() => card.remove(), 600);
     Sound.fx("whoosh"); if (navigator.vibrate) navigator.vibrate(8);
@@ -1339,13 +1394,13 @@ const Story = {
     card.addEventListener("pointermove", (e) => {
       if (!down) return;
       dx = e.clientX - sx; dy = e.clientY - sy;
-      card.style.transform = `translate(${dx}px, ${dy}px) rotate(${card._rot + dx * 0.06}deg)`;
+      card.style.transform = `translateX(${dx}px)`;
     });
     const end = () => {
       if (!down) return; down = false;
       const dt = performance.now() - t0, dist = Math.hypot(dx, dy), speed = dist / Math.max(dt, 1);
       if (dist < 10 && dt < 400) { card.classList.remove("drag"); this.place(card, 0); return this.tapTop(); }
-      if (Math.abs(dx) > innerWidth * 0.25 || speed > 0.7 || dy < -160) return this.throwTop(dx || 1, dy);
+      if (Math.abs(dx) > innerWidth * 0.22 || speed > 0.6) { if (dx > 0 && this.idx > 0) { card.classList.remove("drag"); this.place(card, 0); return this.back(); } return this.throwTop(dx < 0 ? -1 : 1, 0); }
       card.classList.remove("drag"); this.place(card, 0);       // pas assez fort : elle revient sur la pile
     };
     card.addEventListener("pointerup", end);
