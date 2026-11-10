@@ -26,6 +26,8 @@ const CONFIG = {
   code: "lnam2026",            // le code pour ouvrir l'appli (majuscules et accents ignorés)
   indice: "",                 // texte au-dessus du code (laisse vide pour ne rien afficher)
   // Musique jouée dans les niveaux (chaque voyage peut avoir la sienne avec musique: "...")
+  // Affichage des souvenirs : "carnet", "film" ou "polaroid"
+  affichage: "carnet",
   musique: "musique/kids.mp3",
 
   voyages: [
@@ -535,6 +537,38 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
 #story.film .shout { top: 30%; }
 #story.film .sticker { font-size: 25px; padding: 3px 12px 5px; }
 
+
+/* ================= Mode carnet de voyage ================= */
+#story.carnet { background: #3E2A1E radial-gradient(120% 80% at 50% 30%, #5A3D2B, #2E1F16); perspective: 1600px; }
+#story.carnet::before { opacity: .05; }
+#story.carnet .stack { top: calc(env(safe-area-inset-top) + 86px); bottom: calc(env(safe-area-inset-bottom) + 78px); left: 10px; right: 10px; display: block; perspective: 1600px; }
+#story.carnet .pcard { inset: 0; width: auto; height: auto; max-height: none; cursor: default; transform-origin: left center; transition: transform .7s cubic-bezier(.3,.6,.25,1), opacity .7s; }
+#story.carnet .pcard.under { pointer-events: none; }
+#story.carnet .pcard .inner, #story.carnet .pcard .front { height: 100%; }
+#story.carnet .pcard .front { position: relative; padding: 18px 16px 14px 30px; border-radius: 4px 14px 14px 4px; box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  background: #FBF6EA repeating-linear-gradient(transparent 0 31px, rgba(44,90,160,.13) 31px 32px);
+  display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+#story.carnet .pcard .front::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 22px; background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,0)); }
+#story.carnet .pcard .front::after { content: ""; position: absolute; left: 9px; top: 18px; bottom: 18px; width: 8px; background: radial-gradient(circle, #3E2A1E 3.2px, transparent 3.6px) 0 0 / 8px 26px repeat-y; }
+#story.carnet .pcard .back, #story.carnet .pcard .zoom, #story.carnet .pcard .tape, #story.carnet .sticker { display: none; }
+#story.carnet .tb-sub { margin-top: 4px; font-size: 15px; }
+#story.carnet .pcard .cap { order: 0; width: 100%; padding: 0 2px 8px; font-size: clamp(30px, 9vw, 40px); color: #1E2B28; display: flex; justify-content: space-between; align-items: baseline; }
+#story.carnet .pcard .cap small { font-family: "Caveat", cursive; font-size: 20px; color: #8A7A5E; }
+#story.carnet .pcard .tape { top: auto; left: auto; position: absolute; }
+#story.carnet .pcard .ph { order: 1; flex: 1 1 auto; min-height: 0; width: 100%; aspect-ratio: auto !important; background: none; display: grid; place-items: center; overflow: visible; position: relative; }
+#story.carnet .pcard .ph img.blur { display: none; }
+#story.carnet .pcard .ph img:not(.blur), #story.carnet .pcard .ph video { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; background: #fff; padding: 6px; box-shadow: 0 6px 16px rgba(0,0,0,.25); transform: rotate(-1.2deg); }
+#story.carnet .pcard:nth-child(even) .ph img:not(.blur) { transform: rotate(1.4deg); }
+#story.carnet .pcard .sub { order: 2; display: block; width: 100%; padding: 10px 2px 0; }
+#story.carnet .pcard .sub p { font-family: "Caveat", cursive; font-size: clamp(22px, 6.4vw, 28px); line-height: 1.12; color: #23324A; }
+#story.carnet .pcard .sub p:empty { display: none; }
+#story.carnet .pcard .sub small { display: none; }
+.pstamp-c { display: none; }
+#story.carnet .pstamp-c { display: grid; place-items: center; position: absolute; right: 8px; top: 62px; z-index: 3; width: 74px; height: 74px; background: rgba(251,246,234,.85); border-radius: 50%; border: 3px double #C0266D; color: #C0266D; text-align: center; font-weight: 800; font-size: 11px; line-height: 1.1; padding: 8px; transform: rotate(-14deg); opacity: .85; text-transform: uppercase; }
+#story.carnet .pstamp-c b { display: block; font-size: 12px; }
+#story.carnet .sticker { font-size: 26px; }
+#story.carnet .pcard.land .ph img:not(.blur) { max-height: 100%; }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .bubble { opacity: 1; transform: none; } .polaroid img { filter: none; } }
 </style>
 </head>
@@ -613,7 +647,7 @@ p.sec-sub { color: var(--muted); padding: 0 16px; font-size: 16px; }
 <button class="sound-btn" id="soundBtn" aria-label="Couper le son" hidden><span class="eq"><i></i><i></i><i></i></span></button>
 
 <!-- ============ Table de polaroids ============ -->
-<div id="story" class="film" role="dialog" aria-modal="true" aria-label="Souvenirs">
+<div id="story" role="dialog" aria-modal="true" aria-label="Souvenirs">
   <div class="tb-top">
     <div class="tb-title">
       <span class="sticker" id="stT"></span>
@@ -647,6 +681,7 @@ const poster = (m) => { const s = srcOf(m); return isVideo(s) ? s.replace(/\.\w+
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
 const f = (n) => n.toFixed(1);
 const playable = C.voyages.filter((v) => v.chapitres.length);
+const MODE = C.affichage || "carnet";
 let CUR = null;   // le voyage ouvert
 
 /* ================= Son ================= */
@@ -822,6 +857,8 @@ function openLevel(v) {
   setTimeout(animateMap, 300);
 }
 $("#playAll").onclick = () => Story.open(CUR, 0);
+$("#story").classList.add(MODE);
+if (MODE === "carnet") $("#stHint").innerHTML = "Tourne la page du doigt,<br>touche une photo pour l'agrandir.";
 function openFull(src) { const f = $("#full"); f.querySelector("img").src = src; f.classList.add("on"); }
 $("#full").addEventListener("click", () => $("#full").classList.remove("on"));
 
@@ -1274,6 +1311,7 @@ const Story = {
     card.querySelector(".back p").textContent = it.note || c.texte;
     card.querySelector(".sub p").textContent = it.note || (it.mi === 0 ? c.texte : "");
     card.querySelector(".sub small").textContent = (it.mi + 1) + " / " + c.medias.length;
+    if (it.mi === 0) card.querySelector(".front").append(el("span", { className: "pstamp-c", innerHTML: "<b>" + c.lieu + "</b>" + this.V.nom }));
     card.querySelector(".back small").textContent = c.lieu;
     card._i = i; card._rot = this.rot(i);
     this.bindDrag(card);
@@ -1283,6 +1321,7 @@ const Story = {
     const r = card._rot;
     card.style.zIndex = 10 - depth;
     card.classList.toggle("under", depth > 0);
+    if (MODE === "carnet") { card.style.transform = "none"; card.style.opacity = depth <= 1 ? "" : "0"; return; }
     card.style.transform = depth === 0 ? "none" : "scale(1.05)";
     card.style.opacity = depth <= 1 ? "" : "0";
   },
@@ -1297,7 +1336,7 @@ const Story = {
         $("#stack").prepend(card);
         if (depth === 0 && enterFrom) {
           card.classList.add("drag");
-          card.style.transform = `translateX(${enterFrom * 100}vw)`;
+          card.style.transform = MODE === "carnet" ? "rotateY(-120deg)" : `translateX(${enterFrom * 100}vw)`;
           card.getBoundingClientRect(); card.classList.remove("drag");
         } else if (depth > 0) {
           card.classList.add("drag"); this.place(card, depth + 1); card.style.opacity = 0;
@@ -1343,6 +1382,7 @@ const Story = {
     const card = this.top(); if (!card) return;
     const v = card.querySelector("video"), snd = card.querySelector(".snd");
     if (v && snd) { snd.remove(); v.muted = Sound.muted; v.currentTime = 0; v.play().catch(() => {}); this.duckIfNeeded(); return; }
+    if (MODE === "carnet") { if (!v) openFull(this.items[this.idx].src); return; }
     if ($("#story").classList.contains("film")) { $("#story").classList.toggle("clean"); return; }
     card.classList.toggle("flipped");
     if (card.classList.contains("flipped")) {
@@ -1359,7 +1399,7 @@ const Story = {
     this.els.delete(this.idx);
     card.classList.remove("drag");
     card.style.transition = "transform .55s cubic-bezier(.2,.6,.3,1), opacity .55s";
-    card.style.transform = `translateX(${dir * 105}vw)`;
+    card.style.transform = MODE === "carnet" ? "rotateY(-120deg)" : `translateX(${dir * 105}vw)`;
     card.style.opacity = 0;
     setTimeout(() => card.remove(), 600);
     Sound.fx("whoosh"); if (navigator.vibrate) navigator.vibrate(8);
@@ -1394,7 +1434,7 @@ const Story = {
     card.addEventListener("pointermove", (e) => {
       if (!down) return;
       dx = e.clientX - sx; dy = e.clientY - sy;
-      card.style.transform = `translateX(${dx}px)`;
+      card.style.transform = MODE === "carnet" ? `rotateY(${Math.max(-120, Math.min(0, dx / innerWidth * 160))}deg)` : `translateX(${dx}px)`;
     });
     const end = () => {
       if (!down) return; down = false;
