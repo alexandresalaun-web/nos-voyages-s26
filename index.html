@@ -617,16 +617,22 @@ const Sound = {
     $("#soundBtn").hidden = false;
     if (!src || !this.song) return;
     if (this.cur !== src) { this.cur = src; this.song.src = src; this.song.volume = 0; }
+    this.active = true;
     this.song.play().catch(() => {});
     this.fade(this.target(), 1200);
   },
   stop() {
+    this.active = false;
     $("#soundBtn").hidden = true;
     if (this.song) this.fade(0, 600, () => this.song.pause());
   },
   apply() {
     const v = this.muted ? 0 : this.ducked ? 0.2 : 1;
-    if (this.song && !this.song.paused) this.fade(this.target(), 250);
+    // Sur iPhone, une vidéo avec du son met la musique en pause : on la relance quand la vidéo s'arrête
+    if (this.song && this.active) {
+      if (this.song.paused && !this.ducked && !this.muted) this.song.play().catch(() => {});
+      if (!this.song.paused) this.fade(this.target(), 250);
+    }
     document.body.classList.toggle("muted", this.muted);
     $("#soundBtn").setAttribute("aria-label", this.muted ? "Remettre le son" : "Couper le son");
     $("#stSound").innerHTML = this.muted
@@ -672,6 +678,7 @@ const Sound = {
   }
 };
 $("#soundBtn").onclick = () => Sound.toggle();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) Story.duckIfNeeded ? Story.duckIfNeeded() : Sound.apply(); });
 $("#stSound").onclick = (e) => { e.stopPropagation(); Sound.toggle(); };
 
 /* ================= Progression ================= */
@@ -1190,6 +1197,8 @@ const Story = {
     if (isVideo(it.src)) {
       const v = el("video", { src: it.src, poster: poster(it.src), playsInline: true, loop: true, preload: "auto" });
       v.setAttribute("playsinline", ""); ph.append(v);
+      v.addEventListener("play", () => this.duckIfNeeded());
+      v.addEventListener("pause", () => setTimeout(() => this.duckIfNeeded(), 150));
     } else {
       const img = el("img", { src: it.src, alt: c.titre, draggable: false });
       img.onload = () => { if (img.naturalWidth > img.naturalHeight * 1.1) card.classList.add("land"); };
@@ -1254,7 +1263,8 @@ const Story = {
   },
   duckIfNeeded() {
     const v = this.top()?.querySelector("video");
-    Sound.duck(!!(v && !v.muted) || !!(this.voice.src && !this.voice.paused));
+    if (!$("#story").classList.contains("on")) return Sound.duck(false);
+    Sound.duck(!!(v && !v.paused && !v.muted) || !!(this.voice.src && !this.voice.paused));
   },
   syncMute() {
     this.voice.muted = Sound.muted;
